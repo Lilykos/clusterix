@@ -1,0 +1,11 @@
+lxml
+stemming
+langid
+nltk
+pipetools
+xmltodict
+chardet
+unidecode
+flask
+flask_assets
+requests
