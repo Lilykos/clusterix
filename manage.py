@@ -5,7 +5,6 @@ from clusterix.affiliations.xml_parser import parse
 manager = Manager(app)
 
 
-@manager.command
 @manager.option('-f', '--file', dest='xml_file', default=None,
                 help='Parse the affiliations from xml.')
 def parse_xml(xml_file):
