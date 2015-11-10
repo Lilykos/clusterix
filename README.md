@@ -11,7 +11,7 @@ preprocessing and extraction using the following commands:
 `python manage.py runserver`
 
 This command will run the Flask server, after which it can be used to make POST requests to it,
-using the url [http://127.0.0.1:5000/add_affiliation/<affiliation string>](http://127.0.0.1:5000/add_affiliation/<affiliation string>).
+using the url [http://127.0.0.1:5000/add_affiliation/](http://127.0.0.1:5000/add_affiliation/).
 
 E.g. the string _Department of Physics and Engineering Physics, Fordham University Bronx, NY 10458, USA_, will return (and save to the db):
 
@@ -41,7 +41,7 @@ affiliations from a structured xml file.
 ## Important steps / TODO
 - [ ] Crate API
     - [x] Single affiliation REST API
-    - [] XML upload API (maybe not really useful, the manager should be enough)
+    - [ ] XML upload API (maybe not really useful, the manager should be enough)
 - [ ] Data preprocessing (affiliation specific)
     - [x] Use GROBID API for affiliation parsing
     - [x] Language detection
