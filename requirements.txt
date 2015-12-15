@@ -1,3 +1,5 @@
+scipy
+sklearn
 lxml
 stemming
 langid

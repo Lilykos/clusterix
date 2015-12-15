@@ -46,15 +46,15 @@ class Affiliation(db.Model):
         self.grobid_xml = grobid_xml
         self.language = language
 
-    def __repr__(self):
-        return (
-            """
-            raw string - {}
-            country - {}
-            affiliation - {} {} {}
-            """.format(self.raw_string, self.country,
-                       self.institution, self.department, self.laboratory,)
-        )
+    # def __repr__(self):
+    #     return (
+    #         """
+    #         raw string - {}
+    #         country - {}
+    #         affiliation - {} {} {}
+    #         """.format(self.raw_string, self.country,
+    #                    self.institution, self.department, self.laboratory,)
+    #     )
 
 
 class BrokenAffiliation(db.Model):
@@ -74,10 +74,10 @@ class BrokenAffiliation(db.Model):
         self.raw_string_unicode = raw_string_unicode
         self.grobid_xml = grobid_xml
 
-    def __repr__(self):
-        return (
-            """
-            raw string: {}
-            GROBID: {}
-            """.format(self.raw_string, self.grobid_xml)
-        )
+    # def __repr__(self):
+    #     return (
+    #         """
+    #         raw string: {}
+    #         GROBID: {}
+    #         """.format(self.raw_string, self.grobid_xml)
+    #     )

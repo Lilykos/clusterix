@@ -1,0 +1,68 @@
+/************************
+ HTML overwrites
+ ************************
+*/
+body {
+    background-color: #ecf0f1;
+}
+
+
+/************************
+ Bootstrap overwrites
+ ************************
+*/
+.navbar {
+    background-color: #2c3e50;
+}
+
+.container {
+    width: 100%;
+}
+
+.navbar-brand {
+    width: 100px;
+    height: 100px;
+    background: #34495e;
+}
+
+
+/************************
+ Clusterix classes
+ ************************
+*/
+.diagram-space {
+    background-color: #ffffff;
+    height: 100vh;
+    margin-top: -20px;
+}
+
+.process-space {
+    margin-top: -20px;
+}
+
+.inspire-icon-style {
+    position: absolute;
+    top: 25%;
+    bottom: 25%;
+    margin-left: 5px;
+    width: 60px;
+}
+
+.search-box {
+    margin-top: 25px;
+}
+
+.d3-tip {
+    position: absolute;
+    text-align: center;
+    padding: 2px;
+    font: 14px sans-serif;
+    background: lightsteelblue;
+    border: solid;
+    border-radius: 8px;
+    pointer-events: none;
+}
+
+.mini-treemap:hover {
+    fill-opacity: .7;
+}
