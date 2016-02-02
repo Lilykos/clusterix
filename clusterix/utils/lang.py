@@ -1,15 +1,25 @@
-def strip_accents_from_str(string):
+import re
+from nltk.corpus import stopwords
+from nltk.stem.porter import PorterStemmer
+from nltk import word_tokenize, sent_tokenize
+
+from unidecode import unidecode
+"""General language functions."""
+
+stemmer = PorterStemmer()
+
+
+def strip_accents(string):
     """
-    Strip accents in the input phrase X (assumed in UTF-8) by replacing
+    Strip accents in the database phrase X (assumed in UTF-8) by replacing
     accented characters with their unaccented cousins.
 
-    :param string: The raw input string.
+    :param string: The raw string.
     :type string: str
 
     :return: The unaccented string.
     :rtype: str
     """
-    from unidecode import unidecode
     try:
         import chardet
         CHARDET_AVAILABLE = True
@@ -31,7 +41,7 @@ def strip_accents_from_str(string):
 
     def _decode_to_unicode(text, default_encoding='utf-8'):
         """
-        Decode input text into Unicode representation by first using the default
+        Decode database text into Unicode representation by first using the default
         encoding utf-8. More info:
         https://github.com/inveniosoftware/invenio/blob/legacy/modules/miscutil/lib/textutils.py#L429
         """
@@ -47,7 +57,7 @@ def strip_accents_from_str(string):
             res = chardet.detect(text)
             if res['confidence'] >= 0.8:
                 detected_encoding = res['encoding']
-        if detected_encoding == None:
+        if detected_encoding is None:
             # No chardet detection, try to make a basic guess
             dummy, detected_encoding = _guess_minimum_encoding(text)
         return text.decode(detected_encoding)
@@ -84,3 +94,28 @@ def strip_accents_from_str(string):
         return _translate_to_ascii(string)[0]
     except (TypeError, UnicodeEncodeError):
         return _translate_to_ascii(string.encode('utf-8'))[0]
+
+
+def stem(word):
+    """Stemming method."""
+    return stemmer.stem(word)
+
+
+def tokenize_clean_text(text):
+    """
+    Basic NLP string processing. Tokenization, removal of stopwords/special characters.
+
+    :param text: The input text for processing.
+    :type text: str
+
+    :return: A string containing the tokens.
+    :rtype: str
+    """
+    def _clean_text(txt):
+        for sign in ['\n', '\t']:
+            txt = text.replace(sign, ' ')
+        return re.sub('[^a-zA-Z]+', ' ', txt).lower()
+
+    result = _clean_text(text)
+    return [word for sentence in sent_tokenize(result) for word in word_tokenize(result)
+            if word not in stopwords.words('english')]

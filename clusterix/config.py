@@ -1,16 +1,5 @@
-class Config():
-    """App configuration"""
-    GROBID_ENDPOINT = 'http://inspire-grobid.cern.ch:8080/processAffiliations'
-    GROBID_AFF_PREFIX = 'affiliations='
+"""App configuration"""
 
-    DATABASE = '{drivername}://{username}:{password}@{host}:{port}/{database}'.format(
-        drivername='postgres',
-        host='localhost',
-        port='5432',
-        username='db',
-        password='db',
-        database='affiliations_db'
-    )
-
-    def __init__(self):
-        pass
+TEMP_FILE_PATH = 'temp_input/'
+TEMP_MODULE_PATH = 'temp_modules/'
+DB_PATH = TEMP_FILE_PATH + 'db.json'
