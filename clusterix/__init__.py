@@ -1,14 +1,14 @@
 from flask import Flask
 
-from clusterix.affiliations import models
-from config import Config
+from config import DATABASE
+from database import models
 from controllers.main import main
 
 
 # App init
 app = Flask(__name__)
 app.debug = True
-app.config['SQLALCHEMY_DATABASE_URI'] = Config.DATABASE
+app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE
 app.register_blueprint(main)
 
 

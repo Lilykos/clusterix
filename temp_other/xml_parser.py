@@ -6,7 +6,7 @@ from processing import process_affiliation
 
 def parse(xml_file):
     """
-    Parse an xml file, get the affiliations and start the processing.
+    Parse an xml file, get the database and start the processing.
 
     :param xml_file: The xml file path.
     :type xml_file: str
