@@ -20,8 +20,9 @@ def get_attr_from_request(files, form):
     algorithms = form.get('algorithms').split(',')
     csv_fields = json.loads(form.get('csv_fields'))
     block_by = form.get('block_by')
+    delimiter = form.get('delimiter')
 
-    return file, type, timestamp, algorithms, csv_fields, block_by
+    return file, type, timestamp, algorithms, csv_fields, block_by, delimiter
 
 
 def save_file_to_disk(file):
@@ -32,8 +33,8 @@ def save_file_to_disk(file):
     return saved_file_path
 
 
-def read_save_csv(file_path, timestamp):
-    data = pd.read_csv(file_path)
+def read_save_csv(file_path, timestamp, delimiter):
+    data = pd.read_csv(file_path, sep=delimiter)
     cols = data.columns
 
     for data_row in data.values:

@@ -9,6 +9,7 @@ var Router = (function() {
 
     var dataModel = {
         blockBy: '',
+        delimiter: ',',
         /* Algorithms Representation:
            algorithms: ['K-Means', ...]
          */
@@ -44,6 +45,7 @@ var Router = (function() {
         data.append('algorithms', dataModel.algorithms);
         data.append('csv_fields', JSON.stringify(dataModel.csvFields));
         data.append('block_by', dataModel.blockBy);
+        data.append('delimiter', dataModel.delimiter);
 
         $.ajax({
             type: 'POST',
@@ -54,9 +56,9 @@ var Router = (function() {
             processData: false,
             success: function(data){
                 new Treemap().init(data,
-                {width: 900, height: 675}, // Treemap size
-                {width: 260, height: 195}  // Mini map size
-            );
+                    {width: 900, height: 675}, // Treemap size
+                    {width: 260, height: 195}  // Mini map size
+                );
             }
         });
     }

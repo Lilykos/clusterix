@@ -8,6 +8,7 @@ from input import (save_file_to_disk,
 
 
 main = Blueprint('main', __name__)
+current_timestamp = 0
 
 
 @main.route('/', methods=['POST', 'GET'])
@@ -17,40 +18,23 @@ def index():
 
 @main.route('/upload', methods=['POST'])
 def data_file_input():
-    file, type, timestamp, algorithms, csv_fields, block_by = get_attr_from_request(request.files, request.form)
+    file, type, timestamp, algorithms,\
+        csv_fields, block_by, delimiter = get_attr_from_request(request.files, request.form)
     file_path = save_file_to_disk(file)
 
-    # if type == 'text/plain':
-    #     read_save_txt(file_path, timestamp)
-    # elif type == 'text/csv':
-    #     read_save_csv(file_path, timestamp)
+    global current_timestamp
+
+    if timestamp != current_timestamp:
+        if type == 'text/plain':
+            read_save_txt(file_path, timestamp)
+        elif type == 'text/csv':
+            read_save_csv(file_path, timestamp, delimiter)
+        current_timestamp = timestamp
 
     for alg in algorithms:
         if alg == 'kmeans':
             pass
         if alg == 'bcluster':
-            result = block_cluster(csv_fields, block_by)
-
+            result = block_cluster(csv_fields, block_by, timestamp)
 
     return jsonify(**result)
-
-
-
-
-
-
-
-# @main.route('/cluster_data', methods=['POST'])
-# def get_country_cluster():
-#     attrs = json.loads(request.form.get('csvFields'))
-#     # algorithm = json.loads(request.form.get('algorithmData'))
-#
-#     result = BlockClusterer.cluster_data(attrs, 'Survived')
-#     return jsonify(**result)
-#
-#
-# @main.route('/add_affiliation/<path:affiliation>', methods=['POST'])
-# def add_affiliation(affiliation):
-#     pass
-#     aff = process_affiliation(affiliation)
-#     return jsonify(aff) if aff else 'FAILED'

@@ -67,7 +67,10 @@ var DataInput = (function() {
         Papa.parse(attr.file, { dynamicTyping: true, preview: 100,
             complete: function(results) {
                 var headers = results.data.shift();
+                var delimiter = results.meta.delimiter;
                 var data = results.data;
+
+                Router.set('delimiter', delimiter);
 
                 Utils.compileTemplate(attr.csvTemplate, attr.modalContent, {headers:headers, data:data});
                 // Render the csv panel. We do this here because we need the headers (fields).

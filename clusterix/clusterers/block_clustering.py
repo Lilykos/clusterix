@@ -49,7 +49,7 @@ def get_field(items, key):
     return values
 
 
-def block_cluster(fields_with_scaling, block_by_field):
+def block_cluster(fields_with_scaling, block_by_field, timestamp):
     import sys
     sys.setrecursionlimit(10000)
 
@@ -61,9 +61,9 @@ def block_cluster(fields_with_scaling, block_by_field):
     # Create a list of dicts, needed for the block clustering computation
     #
     #
-    items = get_items_from_db()
+    items = get_items_from_db(timestamp)
     item_dict_list = []
-    for item in items[:400]:  # TODO REMOVE THAT
+    for item in items[:1000]:  # TODO REMOVE THAT
         row_keys = {}
         # Iterate through all the metadata
         # BUT use only the allowed keys provides by the app

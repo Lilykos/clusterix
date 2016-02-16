@@ -47,7 +47,7 @@ def strip_accents_from_str(string):
             res = chardet.detect(text)
             if res['confidence'] >= 0.8:
                 detected_encoding = res['encoding']
-        if detected_encoding == None:
+        if detected_encoding is None:
             # No chardet detection, try to make a basic guess
             dummy, detected_encoding = _guess_minimum_encoding(text)
         return text.decode(detected_encoding)
