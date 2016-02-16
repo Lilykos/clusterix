@@ -1,9 +1,9 @@
 def strip_accents_from_str(string):
     """
-    Strip accents in the input phrase X (assumed in UTF-8) by replacing
+    Strip accents in the database phrase X (assumed in UTF-8) by replacing
     accented characters with their unaccented cousins.
 
-    :param string: The raw input string.
+    :param string: The raw database string.
     :type string: str
 
     :return: The unaccented string.
@@ -31,7 +31,7 @@ def strip_accents_from_str(string):
 
     def _decode_to_unicode(text, default_encoding='utf-8'):
         """
-        Decode input text into Unicode representation by first using the default
+        Decode database text into Unicode representation by first using the default
         encoding utf-8. More info:
         https://github.com/inveniosoftware/invenio/blob/legacy/modules/miscutil/lib/textutils.py#L429
         """
@@ -47,7 +47,7 @@ def strip_accents_from_str(string):
             res = chardet.detect(text)
             if res['confidence'] >= 0.8:
                 detected_encoding = res['encoding']
-        if detected_encoding == None:
+        if detected_encoding is None:
             # No chardet detection, try to make a basic guess
             dummy, detected_encoding = _guess_minimum_encoding(text)
         return text.decode(detected_encoding)

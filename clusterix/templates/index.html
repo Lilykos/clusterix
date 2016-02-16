@@ -2,66 +2,263 @@
 <html>
 <head>
     <title>Clusterix</title>
-
     <!-- CSS -->
     <link rel="stylesheet" type="text/css" href="../static/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../static/css/fileinput.css">
+    <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/styles/default.min.css">
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Roboto:300,400,500,700">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.8/semantic.min.css">
     <link rel="stylesheet" type="text/css" href="../static/css/clusterix.css">
 
+    <!-- JS LIB -->
+    <script src="../static/lib/jquery-2.1.4.min.js"></script>
+    <script src="../static/lib/bootstrap.js"></script>
+
+    <script src="../static/lib/d3.min.js"></script>
+    <script src="../static/lib/d3-tip.js"></script>
+    <script src="../static/lib/papaparse.min.js"></script>
+    <script src="../static/lib/fileinput.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.8/semantic.min.js"></script>
+
+
     <!-- JS -->
-    <script src="../static/js/jquery-2.1.4.min.js"></script>
-    <script src="../static/js/bootstrap.min.js"></script>
-    <script src="../static/js/d3.min.js"></script>
-    <script src="../static/js/treemap_init.js"></script>
-{#    <script src="../static/js/treemap.js"></script>#}
-    <script src="../static/js/d3-tip.js"></script>
-    <script src="../static/js/event_functions.js"></script>
+    <script src="../static/js/diagrams/treemap.js"></script>
+
+    <script src="../static/js/inputs/data_input.js"></script>
+    <script src="../static/js/inputs/algorithm_input.js"></script>
+    <script src="../static/js/inputs/csv_fields_input.js"></script>
+
+    <script src="../static/js/diagrams/treemap.js"></script>
+
+    <script src="../static/js/views/panels.js"></script>
+
+    <script src="../static/js/searchbox.js"></script>
+    <script src="../static/js/router.js"></script>
+    <script src="../static/js/utils.js"></script>
+    <script src="../static/js/init.js"></script>
+
+
+    <!--------------------------------->
+    <!-- RAW SCRIPTS FOR TEMPLATING -->
+    <!--------------------------------->
+    {% raw %}
+    <!-- TEXT FILE PREVIEW -->
+    <script id="txt-file-preview-template" type="text/x-handlebars-template">
+        <pre><code class="nohighlight">{{data}}</code></pre>
+    </script>
+
+    <!-- CSV FILE PREVIEW -->
+    <script id="csv-file-preview-template" type="text/x-handlebars-template">
+    <table class="table table-hover table-striped">
+        <thead>
+            <tr>{{#each headers}}<th>{{.}}</th>{{/each}}</tr>
+        </thead>
+        <tbody>
+            {{#each data}}
+                <tr>{{#each .}}<td>{{.}}</td>{{/each}}</tr>
+            {{/each}}
+        </tbody>
+    </table>
+    </script>
+
+    <!-- CSV FILE - CHOSEN FIELDS WITH SCALING -->
+    <script id="fields-to-scale-template" type="text/x-handlebars-template">
+        {{#each fields}}
+        <div class="form-group">
+            <label class="control-label" for="scale">{{name}}</label>
+            <input class="form-control input-sm scaling" name="{{name}}" type="number" value="{{scale}}">
+        </div>
+        {{/each}}
+    </script>
+
+    <!-- CSV FILE - FIELDS TO CHOOSE -->
+    <script id="fields-to-select-template" type="text/x-handlebars-template">
+        <select id="multiple-fields-csv" multiple="" class="ui dropdown selection">
+            <option value="">Choose...</option>
+            {{#each fields}}
+            <option value="{{.}}">{{.}}</option>
+            {{/each}}
+        </select>
+    </script>
+
+    <!-- CSV FILE - FIELDS TO CHOOSE -->
+    <script id="block-by-template" type="text/x-handlebars-template">
+        <select id="block-by-field" class="ui dropdown selection">
+            <option value="">Choose...</option>
+            {{#each fields}}
+            <option value="{{.}}">{{.}}</option>
+            {{/each}}
+        </select>
+    </script>
+    {% endraw %}
+    <!--------------------------------->
+    <!-- END OF TEMPLATES -->
+    <!--------------------------------->
 </head>
 <body>
 
-    <nav class="navbar navbar-default">
+
+<!--------------------------------->
+<!-- NAVBAR AND SEARCH -->
+<!--------------------------------->
+<nav class="navbar">
+    <div class="container-fluid no-padding-left">
+
+        <!-- LOGOS -->
         <div class="navbar-header">
-            <a class="navbar-brand" href="#"><img src="../static/img/inspirelabs.svg" class="inspire-icon-style"/></a>
+            <a class="brand-logo inspirehep-logo pull-left" href="#"><img src="../static/img/inspirelabs.svg"/></a>
+            <a class="clusterix-logo pull-left" href="#"><img src="../static/img/clusterix.svg"/></a>
         </div>
-        <ul class="nav navbar-nav">
-            <li><a href="#"><img src="../static/img/clusterix.svg" width="200px"/> </a></li>
-        </ul>
-        <!-- Search box -->
-        <div class="col-sm-3 col-md-3 pull-right search-box">
-            <form class="navbar-form" role="search">
-                <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Search..." id="search-box">
-                    <div class="input-group-btn">
-                        <button class="btn btn-default disabled" type="submit" id="search"><i class="glyphicon glyphicon-search"></i></button>
-                    </div>
+
+        <!-- SEARCH BAR -->
+        <div class="navbar-collapse collapse">
+            <form class="navbar-form navbar-right" role="search">
+                <div class="form-group">
+                    <input type="text" id="search" class="form-control white" placeholder="Search...">
                 </div>
             </form>
         </div>
-    </nav>
+    </div>
+</nav>
 
 
-    <div class="container">
+<!--------------------------------->
+<!-- PROCESS AND DIAGRAM SPACE -->
+<!--------------------------------->
+<div class="row">
+
+    <!--------------------------------->
+    <!-- PROCESS SPACE -->
+    <!--------------------------------->
+    <div class="col-lg-3">
+        <h2 class="space-title">Processing Space</h2>
+
+        <!-- DATA INPUT PANEL -->
+        <div class="panel panel-primary">
+            <div class="panel-heading row no-padding-left">
+                <h3 class="panel-title col-lg-11">Data Input</h3>
+                <a class="white" id="data-input-hide" href="#"><span class="glyphicon glyphicon-chevron-up col-lg-1"></span></a>
+            </div>
+            <div class="panel-body" id="data-input-body">
+                <label class="control-label">Select File</label>
+                <input id="data-input" type="file">
+            </div>
+        </div>
+
+        <!-- CSV FIELDS PANEL -->
+        <div class="panel panel-warning no-display" id="csv-fields-panel">
+            <div class="panel-heading row no-padding-left">
+                <h3 class="panel-title col-lg-11">CSV Fields Options</h3>
+                <a class="white" id="csv-fields-hide" href="#"><span class="glyphicon glyphicon-chevron-up col-lg-1"></span></a>
+            </div>
+            <div class="panel-body" id="csv-fields-body">
+                <div class="panel-group" id="accordion">
+
+                    <!-- CHOOSE FIELD OPTIONS -->
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h5 class="panel-title space-title"><a data-toggle="collapse" data-parent="#accordion" href="#collapse-fields">Choose fields for clustering</a></h5>
+                        </div>
+                        <div id="collapse-fields" class="panel-collapse collapse in">
+                            <div class="panel-body" id="csv-fields-container"></div>
+                        </div>
+                    </div>
+
+                    <!-- SCALING OPTIONS -->
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h5 class="panel-title space-title"><a data-toggle="collapse" data-parent="#accordion" href="#collapse-scaling">Scale the chosen fields</a></h5>
+                        </div>
+                        <div id="collapse-scaling" class="panel-collapse collapse">
+                            <div class="panel-body" id="scale-fields-container"></div>
+                        </div>
+                    </div>
+
+                    <!-- BLOCK BY FIELD SELECTION -->
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h5 class="panel-title space-title"><a data-toggle="collapse" data-parent="#accordion" href="#collapse-block-by">Block by field</a></h5>
+                        </div>
+                        <div id="collapse-block-by" class="panel-collapse collapse">
+                            <div class="panel-body" id="block-by-container"></div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+        <!-- ALGORITHMS AND DEFINITIONS PANEL -->
+        <div class="panel panel-success no-display" id="algorithms-panel">
+            <div class="panel-heading row no-padding-left">
+                <h3 class="panel-title col-lg-11">Algorithm Definitions & Options</h3>
+                <a class="white" href="#" id="algorithms-hide"><span class="glyphicon glyphicon-chevron-up col-lg-1"></span></a>
+            </div>
+
+            <!-- ALGORITHM OPTIONS -->
+            <div class="panel-body" id="algorithms-body">
+                <div class=" form-group row">
+                    <label for="algorithms-selection" class="no-padding-left col-lg-3">Algorithms</label>
+                    <select id="algorithms-selection" multiple="" class="ui dropdown selection col-lg-9">
+                        <option value="">Choose...</option>
+                        <option value="kmeans">K-Means</option>
+                        <option value="bcluster">Block Clustering</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- UPLOAD & CLUSTER BUTTON -->
+        <a href="#" class="btn btn-warning btn-lg btn-block no-display" id="upload">
+            <span class="glyphicon glyphicon-th"></span> Upload and Cluster Data
+        </a>
+
+    </div>
+
+
+    <!--------------------------------->
+    <!-- DIAGRAM SPACE -->
+    <!--------------------------------->
+    <div class="col-lg-9 diagram-container">
         <div class="row">
-            <!-- Algorithm and preprocessing -->
-            <div class="col-md-2 process-space">
-                <h3>Algorithm Definition</h3>
-                <input type="text" id="country-input" placeholder="Select a country">
-                <button id="country-select">Get Map</button>
-                <button id="all-countries">Get All</button>
+            <h2 class="space-title">Visualization Swatchboard</h2>
+            <div class="col-lg-3">
+                <div id="treemap-mini"></div>
             </div>
-
-            <!-- Diagrams -->
-            <div class="col-md-10 diagram-space">
-                <h3>Treemap Swatchboard</h3>
-                <div class="col-md-3">
-                    <div id="treemap-mini"></div>
-                </div>
-                <div class="col-md-9">
-                    <div id="treemap"></div>
-                </div>
-            </div>
+            <div class="col-lg-9">
+                <div id="treemap"></div>
             </div>
         </div>
     </div>
+</div>
 
+
+<!--------------------------------->
+<!-- MODALS -->
+<!--------------------------------->
+
+<!-- DATA PREVIEW MODAL -->
+<div id="data-preview-modal" class="modal fade" role="dialog" tabindex='-1'>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header blue-background">
+                <h4 class="modal-title white">Data Preview</h4>
+            </div>
+            <div class="modal-body" id="data-modal-content"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--------------------------------->
+<!-- ALERTS -->
+<!--------------------------------->
+<div id="alert-dock"></div>
 </body>
 </html>

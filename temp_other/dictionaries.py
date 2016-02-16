@@ -2,7 +2,7 @@ from pyexpat import ExpatError
 
 import xmltodict
 
-from ..utils.database import save_broken_affiliation
+# from ..utils.database import save_broken_affiliation
 from clusterix.utils.dictionaries import flatten_dict
 
 
@@ -35,7 +35,7 @@ def flatten_affiliation_dict(affiliation_dict):
 
 def map_affiliation(affiliation_dict):
     """
-    Maps the flattened affiliation dictionary to a new data model, that will be used for clustering.
+    Maps the flattened affiliation dictionary to a new data model, that will be used for clusterers.
 
     :param affiliation_dict: The affiliation dictionary which will be simplified.
     :type affiliation_dict: dict

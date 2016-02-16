@@ -1,10 +1,5 @@
-from pipetools import maybe
-
-from ..affiliations.models import Affiliation
-from ..affiliations.utils.database import save_affiliation
-from ..affiliations.utils.dictionaries import flatten_affiliation_dict, map_affiliation
-from ..affiliations.utils.grobid import get_grobid_affiliation_xml
-from ..affiliations.utils.lang import remove_ampersand, detect_language, preprocess_text
+from clusterix.database.models import InputItem
+# from ..database.utils.database import save_affiliation
 
 
 def examine_country_attrs(affiliation):
@@ -15,7 +10,7 @@ def examine_country_attrs(affiliation):
     :param affiliation: The affiliation dictionary which examined for possible mistakes.
     :type affiliation: dict
 
-    :return: The new (hopefully fixed) affiliations dict.
+    :return: The new (hopefully fixed) database dict.
     :rtype: dict
     """
     DEFAULT = ''
@@ -60,15 +55,17 @@ def process_affiliation(affiliation_str):
     :return: The processed dictionary of the affiliation.
     :rtype: dict
     """
-    if not Affiliation.query.filter_by(raw_string=affiliation_str).first():
-        return (
-            affiliation_str > maybe             # break if None
-            | remove_ampersand
-            | detect_language                   # translate if not english text
-            | get_grobid_affiliation_xml        # get GROBID affiliation
-            | flatten_affiliation_dict          # flatten the dictionary
-            | examine_country_attrs             # do some pattern matching for faulty countries
-            | map_affiliation                   # map to the new data model
-            | preprocess_text                   # map to the new data model
-            | save_affiliation                  # save to db
-        )
+    if not InputItem.query.filter_by(raw_string=affiliation_str).first():
+        return
+
+        # return (
+        #     affiliation_str > maybe             # break if None
+        #     | remove_ampersand
+        #     | detect_language                   # translate if not english text
+        #     | get_grobid_affiliation_xml        # get GROBID affiliation
+        #     | flatten_affiliation_dict          # flatten the dictionary
+        #     | examine_country_attrs             # do some pattern matching for faulty countries
+        #     | map_affiliation                   # map to the new data model
+        #     | preprocess_text                   # map to the new data model
+        #     | save_affiliation                  # save to db
+        # )
