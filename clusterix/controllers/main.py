@@ -1,10 +1,11 @@
 from flask import Blueprint, render_template, request, jsonify
 from ..clusterers.block_clustering import block_cluster
+from ..clusterers.kmeans import kmeans_cluster
 
-from input import (save_file_to_disk,
-                   get_attr_from_request,
-                   read_save_csv,
-                   read_save_txt)
+from .input import (save_file_to_disk,
+                    get_attr_from_request,
+                    read_save_csv,
+                    read_save_txt)
 
 
 main = Blueprint('main', __name__)
@@ -33,7 +34,7 @@ def data_file_input():
 
     for alg in algorithms:
         if alg == 'kmeans':
-            pass
+            result = kmeans_cluster()
         if alg == 'bcluster':
             result = block_cluster(csv_fields, block_by, timestamp)
 

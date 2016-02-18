@@ -1,8 +1,8 @@
 from flask import Flask
 
-from config import DATABASE
-from database import models
-from controllers.main import main
+from .config import DATABASE
+from .database import models
+from .controllers.main import main
 
 
 # App init

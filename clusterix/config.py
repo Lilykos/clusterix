@@ -11,7 +11,7 @@ DATABASE = '{drivername}://{username}:{password}@{host}:{port}/{database}'.forma
     port='5432',
     username='db',
     password='db',
-    database='affiliations_db'
+    database='clusterix'
 )
 
 # Temp folders

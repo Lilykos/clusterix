@@ -36,12 +36,12 @@ def save_file_to_disk(file):
 def read_save_csv(file_path, timestamp, delimiter):
     data = pd.read_csv(file_path, sep=delimiter)
     cols = data.columns
-
+    import ipdb; ipdb.set_trace()
     for data_row in data.values:
-        data_string_list = map(stringify_no_accents, data_row)
-
+        # data_string_list = map(stringify_no_accents, data_row)
+        data_string_list = map(str, data_row)
         raw_str = ','.join(data_string_list)
-        data = zip(cols, data_string_list)
+        data = list(zip(cols, data_string_list))
         save_csv_to_db(raw_str, data, timestamp)
 
 

@@ -1,4 +1,4 @@
-from clusterix.database.models import db, InputItem, InputItemMetadata
+from .models import db, InputItem, InputItemMetadata
 
 
 def save_csv_to_db(raw_str, data, timestamp):

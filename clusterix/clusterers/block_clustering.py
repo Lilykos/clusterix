@@ -10,9 +10,6 @@ from ..utils.d3_converter import D3Converter
 
 
 def get_labels(items, block_by, block):
-    # labels = ['Survived:{} Class:{} Sex:{} Age:{}'.format(i['Survived'], i['Pclass'], i['Sex'], i['Age'])
-    #           for i in item_dict_list
-    #           if i[block_by_field] == block]
     labels = []
     for item in items:
         label_str = ''
@@ -92,6 +89,8 @@ def block_cluster(fields_with_scaling, block_by_field, timestamp):
     #
     #
     tf = make_union(*pipeline)
+
+    import ipdb; ipdb.set_trace()
     X = tf.transform(item_dict_list).toarray()
 
     clustering = ScipyHierarchicalClustering(method="average", affinity="euclidean", threshold=100.)
