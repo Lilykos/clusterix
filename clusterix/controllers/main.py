@@ -1,15 +1,12 @@
 from flask import Blueprint, render_template, request, jsonify
+
+from .input import read_save_to_db
+from ..controllers.utils import get_attr_from_request, save_file_to_disk
 from ..clusterers.block_clustering import block_cluster
 from ..clusterers.kmeans import kmeans_cluster
 
-from .input import (save_file_to_disk,
-                    get_attr_from_request,
-                    read_save_csv,
-                    read_save_txt)
-
 
 main = Blueprint('main', __name__)
-current_timestamp = 0
 
 
 @main.route('/', methods=['POST', 'GET'])
@@ -19,23 +16,20 @@ def index():
 
 @main.route('/upload', methods=['POST'])
 def data_file_input():
-    file, type, timestamp, algorithms,\
-        csv_fields, block_by, delimiter = get_attr_from_request(request.files, request.form)
-    file_path = save_file_to_disk(file)
+    attrs = get_attr_from_request(request.files, request.form)
+    file_path = save_file_to_disk(attrs['file'])
 
-    global current_timestamp
+    timestamp, block_by, csv_fields = \
+        attrs['timestamp'], attrs['block_by'], attrs['csv_fields']
 
-    if timestamp != current_timestamp:
-        if type == 'text/plain':
-            read_save_txt(file_path, timestamp)
-        elif type == 'text/csv':
-            read_save_csv(file_path, timestamp, delimiter)
-        current_timestamp = timestamp
+    # Read file and save data to the db.
+    read_save_to_db(attrs, file_path, timestamp)
 
-    for alg in algorithms:
+    # Get the algorithm results
+    for alg in attrs['algorithms']:
         if alg == 'kmeans':
             result = kmeans_cluster()
         if alg == 'bcluster':
-            result = block_cluster(csv_fields, block_by, timestamp)
+            result = block_cluster(csv_fields, block_by, timestamp, 'count')
 
     return jsonify(**result)

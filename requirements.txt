@@ -11,3 +11,4 @@ flask-sqlalchemy
 requests
 psycopg2
 git+https://github.com/inveniosoftware/beard.git
+colorlog

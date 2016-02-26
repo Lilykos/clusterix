@@ -1,15 +1,22 @@
-def strip_accents_from_str(string):
+from nltk.corpus import stopwords
+from nltk.stem.porter import PorterStemmer
+from nltk import word_tokenize
+
+from unidecode import unidecode
+"""General language functions."""
+
+
+def strip_accents(string):
     """
     Strip accents in the database phrase X (assumed in UTF-8) by replacing
     accented characters with their unaccented cousins.
 
-    :param string: The raw database string.
+    :param string: The raw string.
     :type string: str
 
     :return: The unaccented string.
     :rtype: str
     """
-    from unidecode import unidecode
     try:
         import chardet
         CHARDET_AVAILABLE = True
@@ -84,3 +91,22 @@ def strip_accents_from_str(string):
         return _translate_to_ascii(string)[0]
     except (TypeError, UnicodeEncodeError):
         return _translate_to_ascii(string.encode('utf-8'))[0]
+
+
+def preprocess_text(text):
+    """
+    Basic NLP string processing. Tokenization, removal of stopwords and special characters, stemming.
+
+    :param text: The input text for processing.
+    :type text: str
+
+    :return: A string containing the tokens.
+    :rtype: str
+    """
+    text = text.replace('\n', ' ')
+    sentence = word_tokenize(text.lower())
+    words = [word for word in sentence
+             if (word not in stopwords.words('english') and word.isalnum())]
+
+    stemmer = PorterStemmer()
+    return ' '.join(map(stemmer.stem, words))

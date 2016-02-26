@@ -47,16 +47,13 @@ var SearchBox = (function() {
         // We need to compare the old elements with the new, in order to:
         //      1. Find the elements that were used, but not anymore (and repaint them).
         //      2. Find only the new elements to be used (and paint them).
-
         var newElements = Utils.getCommonArrayElements(cellArrays);
-
-        Utils.arrayDifference(oldElements, newElements).map(function(cell) {
-            $(cell).attr('fill', cell.attributes.fillBackup.textContent)
-        });
-
-        Utils.arrayDifference(newElements, oldElements).map(function(cell) {
-            $(cell).attr('fill', colors.blue);
-        });
+        Utils
+            .arrayDifference(oldElements, newElements)
+            .map(function(cell) { $(cell).attr('fill', cell.attributes.fillBackup.textContent); });
+        Utils
+            .arrayDifference(newElements, oldElements)
+            .map(function(cell) { $(cell).attr('fill', colors.blue); });
 
         // Replace the used elements for the next iteration
         oldElements = newElements;
