@@ -5,8 +5,8 @@
     <!-- CSS -->
     <link rel="stylesheet" type="text/css" href="../static/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="../static/css/fileinput.css">
-    <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/styles/default.min.css">
-    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Roboto:300,400,500,700">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/styles/default.min.css">
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700">
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.8/semantic.min.css">
     <link rel="stylesheet" type="text/css" href="../static/css/clusterix.css">
 
@@ -19,9 +19,9 @@
     <script src="../static/lib/papaparse.min.js"></script>
     <script src="../static/lib/fileinput.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/highlight.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.8/semantic.min.js"></script>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lunr.js/0.6.0/lunr.min.js"></script>
 
     <!-- JS -->
     <script src="../static/js/diagrams/treemap.js"></script>
@@ -31,10 +31,12 @@
     <script src="../static/js/inputs/csv_fields_input.js"></script>
 
     <script src="../static/js/diagrams/treemap.js"></script>
+    <script src="../static/js/diagrams/scatterplot.js"></script>
+    <script src="../static/js/diagrams/diagram_renderer.js"></script>
 
     <script src="../static/js/views/panels.js"></script>
 
-    <script src="../static/js/searchbox.js"></script>
+    <script src="../static/js/search.js"></script>
     <script src="../static/js/router.js"></script>
     <script src="../static/js/utils.js"></script>
     <script src="../static/js/init.js"></script>
@@ -225,10 +227,10 @@
         <div class="row">
             <h2 class="space-title">Visualization Swatchboard</h2>
             <div class="col-lg-3">
-                <div id="treemap-mini"></div>
+                <div id="viz-mini"></div>
             </div>
             <div class="col-lg-9">
-                <div id="treemap"></div>
+                <div id="viz"></div>
             </div>
         </div>
     </div>

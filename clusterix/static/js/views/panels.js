@@ -8,9 +8,12 @@ var Panels = (function() {
         ['#csv-fields-hide', '#csv-fields-body']
     ];
 
+    /**
+     * Attach the JQuery function.
+     */
     function registerJQuerySlide() {
         // Init jQuery animations (fade in/out).
-        jQuery.fn.fadeThenSlideToggle = function(buttonID, speed, easing, callback) {
+        $.fn.fadeThenSlideToggle = function(buttonID, speed, easing, callback) {
             if (this.is(":hidden")) {
                 $(buttonID).html(fadeInButton);
                 return this.slideDown(speed, easing).fadeTo(speed, 1, easing, callback);
@@ -21,8 +24,13 @@ var Panels = (function() {
         };
     }
 
+
     return {
 
+        /**
+         * Initialize JQuery function that allows panel fade in/out.
+         * @constructor
+         */
         init: function() {
             registerJQuerySlide();
 

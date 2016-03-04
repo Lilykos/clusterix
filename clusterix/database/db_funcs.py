@@ -47,7 +47,8 @@ def save_csv_to_db(cols, data, timestamp):
 
 
 def save_txt_to_db(lines, timestamp):
-    for line in lines:
+    """Save txt to database"""
+    for line in lines:  # TODO: not fully done/tested. Do not use yet.
         db.session.add(InputItem(raw_string=line, timestamp=timestamp))
     db.session.commit()
 

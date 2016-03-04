@@ -7,6 +7,7 @@ from ..database.db_funcs import save_csv_to_db, save_txt_to_db
 
 
 def read_save_to_db(attrs, file_path, timestamp):
+    """Read data attributes to figure out how to save them in the database."""
     if timestamp != get_last_timestamp():
         log_info(
             'New timestamp {} sent. Saving to db...'.format(timestamp))

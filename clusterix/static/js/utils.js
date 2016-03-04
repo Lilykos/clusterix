@@ -1,10 +1,12 @@
 var Utils = (function() {
+
     return {
+
         /**
          * Compile and render a template using Handlebars.
-         * @param template
-         * @param target
-         * @param data
+         * @param {string} template
+         * @param {string} target
+         * @param {Object} data
          */
         compileTemplate: function(template, target, data) {
             var rendered = Handlebars.compile($(template).html())(data);
@@ -12,38 +14,13 @@ var Utils = (function() {
         },
 
         /**
-         * Returns treue/ false depending on whether an element is found in an array or not.
+         * Returns true/ false depending on whether an element is found in an array or not.
          * @param value
-         * @param array
+         * @param {Array} array
          * @returns {boolean}
          */
         inArray: function(value, array) {
             return array.indexOf(value) > -1;
-        },
-
-        /**
-         * Returns true if array is empty.
-         * @param array
-         * @returns {boolean}
-         */
-        isEmpty: function(array) {
-            return array.length == 0
-        },
-
-        /**
-         * Accepts an array of arrays, and returns the common elements of these arrays.
-         * @param {Array} arrays
-         * @returns {Array}
-         */
-        getCommonArrayElements: function(arrays) {
-            return arrays.shift()
-                .reduce(function(res, v) {
-                    if (!res.includes(v) && arrays.every(function(a) {
-                            return a.indexOf(v) !== -1;
-                        }))
-                        res.push(v);
-                    return res;
-            }, []);
         },
 
         /**
@@ -57,9 +34,15 @@ var Utils = (function() {
             return $(first).not(second).get();
         },
 
+        /**
+         * Delays the trigger of a function by the provided time.
+         * @param {function} fn
+         * @param {int} delay
+         * @return {function}
+         */
         debounce: function(fn, delay) {
             var timer = null;
-            return function () {
+            return function() {
                 var context = this;
                 var args = arguments;
 
@@ -68,6 +51,23 @@ var Utils = (function() {
                     fn.apply(context, args);
                 }, delay);
             };
+        },
+
+        /**
+         * Renders the content of the node (used for the tooltip).
+         * @param {Object} content
+         * @return {string}
+         */
+        renderContent: function(content) {
+            if (content) {
+                var content_txt = '';
+                Object.keys(content).forEach(function (key) {
+                    if (key !== 'id')
+                        content_txt += key + ':' + content[key] + ', '
+                });
+
+                return content_txt;
+            }
         }
     }
 })();

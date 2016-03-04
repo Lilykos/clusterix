@@ -5,9 +5,11 @@ $(function() {
     DataInput.init();
 
     // Views
-    SearchBox.init();
     Panels.init();
 
     // Router & Validation
     Router.init();
+
+    // Search
+    Search.init();
 });

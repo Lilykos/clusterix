@@ -95,7 +95,7 @@ def strip_accents(string):
 
 def preprocess_text(text):
     """
-    Basic NLP string processing. Tokenization, removal of stopwords and special characters, stemming.
+    Basic NLP string processing. Tokenization, removal of stopwords/special characters, stemming.
 
     :param text: The input text for processing.
     :type text: str
@@ -109,4 +109,4 @@ def preprocess_text(text):
              if (word not in stopwords.words('english') and word.isalnum())]
 
     stemmer = PorterStemmer()
-    return ' '.join(map(stemmer.stem, words))
+    return map(stemmer.stem, words)

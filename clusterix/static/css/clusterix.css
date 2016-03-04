@@ -64,7 +64,7 @@ nav {
     overflow: hidden;
 }
 
-.mini-treemap:hover {
+.minimap:hover {
     fill-opacity: .7;
 }
 
@@ -77,6 +77,24 @@ nav {
     pointer-events: none;
 }
 
+.axis {
+    fill: none;
+    stroke: #AAA;
+    stroke-width: 1px;
+}
+.node {
+    cursor:pointer;
+}
+.dot {
+    opacity: .7;
+    cursor: pointer;
+}
+
+.brush .extent {
+  stroke: #7f8c8d;
+  fill-opacity: .125;
+  shape-rendering: crispEdges;
+}
 
 
 /************************

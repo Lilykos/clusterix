@@ -20,14 +20,18 @@ var Router = (function() {
         csvFields: []
     };
 
+    /**
+     * Checks for validity, based on certain rules.
+     * @returns {boolean}
+     */
     function dataIsValid() {
         if (dataFileInfo.empty) {                           // Empty file
             console.log('Data file failed');
             return false;
-        } else if (Utils.isEmpty(dataModel.algorithms)) {   // Empty algorithms array
+        } else if (!dataModel.algorithms.length) {          // Empty algorithms array
             console.log('No algorithms found');
             return false;
-        } else if (Utils.isEmpty(dataModel.csvFields) &&
+        } else if (!dataModel.csvFields.length &&
                 dataFileInfo.file.type === 'text/csv') {    // No csv fields sent
             console.log('Wrong csv fields.');
             return false;
@@ -36,6 +40,9 @@ var Router = (function() {
         return true;
     }
 
+    /**
+     * Uploads everything in FormData format.
+     */
     function upload() {
         var data = new FormData();
 
@@ -55,25 +62,29 @@ var Router = (function() {
             contentType: false,
             processData: false,
             success: function(data){
-                new Treemap().init(data,
-                    {width: 900, height: 675}, // Treemap size
-                    {width: 260, height: 195}  // Mini map size
-                );
+                Renderer.render(data);
             }
         });
     }
 
     return {
 
-        data: function() {
-            return dataModel;
-        },
-
+        /**
+         * Functionality:
+         *      - Saves file/options.
+         *      - Validates the data.
+         *      - Uploads, and on success it renders the visualizations.
+         * @constructor
+         */
         init: function() {
             console.log('Router init');
             $(attr.upload).on('click', this.validateAndUpload);
         },
 
+        /**
+         * Saves the data file.
+         * @param file
+         */
         setFile: function(file) {
             dataFileInfo = {
                 empty: false,
@@ -84,18 +95,38 @@ var Router = (function() {
             console.log('-- Router received: file: ' + dataFileInfo.fileName);
         },
 
+        /**
+         * Sets specific options to the data model.
+         * @param key
+         * @param value
+         */
         set: function(key, value) {
             dataModel[key] = value;
             console.log('-- Router received: ' + key + ': ' + dataModel[key]);
         },
 
+        /**
+         * Self explained. Also notifies Search in order to create index based on csv fields.
+         */
         validateAndUpload: function() {
             if (dataIsValid()) upload();
+            $(document).trigger('data-uploaded', {data: dataModel.csvFields}); // Search init basically
         },
 
+        /**
+         * Checks if the upload button exists, and makes it appear/disappear.
+         */
         checkUploadButton: function() {
-            if (Utils.isEmpty(dataModel.algorithms)) $(attr.upload).fadeOut(200);
+            if (!dataModel.algorithms.length) $(attr.upload).fadeOut(200);
             else $(attr.upload).fadeIn(200);
+        },
+
+        /**
+         * Used for debug reasons, presents all the data that will be sent.
+         * @returns {Object}
+         */
+        data: function() {
+            return dataModel;
         }
     }
 })();

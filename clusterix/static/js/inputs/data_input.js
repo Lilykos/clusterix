@@ -21,10 +21,10 @@ var DataInput = (function() {
         uploadLabel: 'Preview',
         uploadIcon: '<span class="glyphicon glyphicon-eye-open"></span> ',
         layoutTemplates: {
-            main1: "{preview}\n<div class=\'input-group {class}\'>\n" +
-            "<div class=\'input-group-btn\'>\n{browse}\n" +
-            "<span id='data-preview' data-toggle='modal' data-target='#data-preview-modal'>{upload}</span>\n" +
-            "{remove}\n</div>\n{caption}\n</div>"
+            main1: "{preview}<div class='input-group {class}'>" +
+            "<div class='input-group-btn'>{browse}" +
+            "<span id='data-preview' data-toggle='modal' data-target='#data-preview-modal'>{upload}</span>" +
+            "{remove}</div>{caption}</div>"
         }
     };
 
@@ -63,24 +63,25 @@ var DataInput = (function() {
      * Parses the CSV file using Papaparse and renders the modal with the preview.
      */
     function render_csv() {
-
         Papa.parse(attr.file, { dynamicTyping: true, preview: 100,
             complete: function(results) {
                 var headers = results.data.shift();
                 var delimiter = results.meta.delimiter;
                 var data = results.data;
 
+                Utils.compileTemplate(attr.csvTemplate, attr.modalContent, {headers:headers, data:data});
                 Router.set('delimiter', delimiter);
 
-                Utils.compileTemplate(attr.csvTemplate, attr.modalContent, {headers:headers, data:data});
-                // Render the csv panel. We do this here because we need the headers (fields).
+                /**
+                 * Render the csv panel. We do this here because we need the headers (fields).
+                 */
                 CsvFieldsInput.init(headers);
             }
         });
     }
 
-
     return {
+
         /**
          * Functionality:
          *      - 1st step of the workflow. Creates the file input, checks for acceptable files.

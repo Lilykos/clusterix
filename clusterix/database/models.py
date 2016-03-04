@@ -36,7 +36,7 @@ items_to_metadata = db.Table('item_metadata_connection',
 
 
 class InputItem(db.Model):
-    """The input item, containing the raw input."""
+    """The input table, containing the raw input."""
     __tablename__ = 'input_item'
 
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
@@ -45,6 +45,7 @@ class InputItem(db.Model):
 
     # Metadata relationship
     input_item_metadata = db.relationship("InputItemMetadata",
+                                          lazy='subquery',
                                           secondary="item_metadata_connection",
                                           cascade="all, delete-orphan",
                                           single_parent=True)

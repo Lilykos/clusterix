@@ -36,6 +36,7 @@ def save_file_to_disk(file):
 
 
 def get_last_timestamp():
+    """Returns the last used timestamp, to check whether a new file is to be used."""
     result = InputItem.query.with_entities(InputItem.timestamp)\
         .distinct()\
         .order_by(InputItem.timestamp.desc())\

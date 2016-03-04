@@ -14,94 +14,69 @@ var CsvFieldsInput = (function() {
         blockByTemplate: '#block-by-template',
 
         fields: [],             // string array
-        fieldsToScale: [],      // string array
         fieldsWithScaling: [],  // object array
         blockBy: ''
     };
 
+    /**
+     * Update the scaling and notify the Router.
+     */
     function updateFieldsWithScaling() {
         var name = $(this).attr('name');
-            var scale = $(this).val();
+        var scale = $(this).val();
 
-            var field = attr.fieldsWithScaling.filter(function(field) {
-                if (field.name == name) return field
-            })[0];
-            field.scale = scale;
-            Router.set('csvFields', attr.fieldsWithScaling);
-    }
+        var field = attr.fieldsWithScaling.filter(function(field) {
+            if (field.name == name) return field
+        })[0];
 
-
-    function renderFieldsToScale(newItem) {
-        // Every time this happens we have a new item.
-        // We need to check if we add or remove it.
-        if (Utils.inArray(newItem, attr.fieldsToScale)) {
-            attr.fieldsWithScaling.push({
-                name: newItem,
-                scale: 1
-            });
-        } else {
-            attr.fieldsWithScaling = attr.fieldsWithScaling
-                .filter(function (item) {
-                    if (item.name !== newItem) return item;
-                });
-        }
-
-        Utils.compileTemplate(attr.scaleFieldsTemplate, attr.scaledFieldsContainer, { fields: attr.fieldsWithScaling });
+        field.scale = scale;
         Router.set('csvFields', attr.fieldsWithScaling);
+    }
 
+    /**
+     * Gets the default values or the new values from the field selector,
+     * and sets them on the appropriate variables OR the default ones.
+     * @param fields
+     */
+    function saveValues(fields) {
+        attr.fieldsWithScaling = fields.length
+            ? fields.map(function(f) { return {name: f, scale: 1} })
+            : attr.fields.map(function(f) { return {name: f, scale: 1} });
+        attr.blockBy = fields.length ? fields[0] : attr.fields[0];
+    }
+
+    /**
+     * Render all the chosen fields, with their scaling.
+     */
+    function renderFieldsToScale() {
+        Utils.compileTemplate(attr.scaleFieldsTemplate, attr.scaledFieldsContainer, { fields: attr.fieldsWithScaling });
         $(attr.scaleSelectors).on('change', updateFieldsWithScaling);
+
+        Router.set('csvFields', attr.fieldsWithScaling);
     }
 
-    function renderBlockByField() {
-        Utils.compileTemplate(attr.blockByTemplate, attr.blockByContainer, { fields: attr.fieldsToScale });
-
-        attr.blockBy = attr.fieldsToScale[0];
-        Router.set('blockBy', attr.blockBy);
-
-        $(attr.blockBySelector).dropdown({
-            onChange: function(val, text, selected) {
-                attr.blockBy = text;
-                Router.set('blockBy', attr.blockBy);
-            }
-        });
-    }
-
+    /**
+     * Every time an item is added/removed, it re-renders the panels.
+     */
     function renderFieldsToChoose() {
         Utils.compileTemplate(attr.csvFieldsTemplate, attr.csvFieldsContainer, { fields: attr.fields });
         $(attr.selectID).dropdown({
-            onChange: function(val, text, selected) {
-                attr.fieldsToScale = val;
-
-                if (val.length !== 0) {
-                    renderBlockByField();
-                    renderFieldsToScale(text)
-                } else {
-                    renderInitialFieldsToScale();
-                    renderInitialBlockByField();
-                }
-
+            onChange: function(fields, item, selected) {
+                saveValues(fields);
+                renderBlockByField();
+                renderFieldsToScale();
             }
         });
     }
 
+    /**
+     * Renders the block by field according to the user-chosen fields,
+     * and sets the variable to the Router.
+     */
+    function renderBlockByField() {
+        var fields = attr.fieldsWithScaling.map(function(f) { return f.name; });
 
-
-
-    // HELPER FUNCTIONS HERE
-    function saveDefaultValues(fields) {
-        attr.fields = fields;
-        attr.fieldsToScale = fields;
-        attr.blockBy = fields[0];
-    }
-
-    function getAllFieldsWithScale_1() {
-        return attr.fields.map(function(i) {
-            return { name: i, scale: 1 };
-        });
-    }
-
-    function renderInitialBlockByField() {
-        Utils.compileTemplate(attr.blockByTemplate, attr.blockByContainer, { fields: attr.fields });
+        Utils.compileTemplate(attr.blockByTemplate, attr.blockByContainer, { fields: fields });
         Router.set('blockBy', attr.blockBy);
 
         $(attr.blockBySelector).dropdown({
@@ -112,26 +87,31 @@ var CsvFieldsInput = (function() {
         });
     }
 
-    function renderInitialFieldsToScale() {
-        var fields = getAllFieldsWithScale_1();
-
-        Utils.compileTemplate(attr.scaleFieldsTemplate, attr.scaledFieldsContainer, { fields: fields });
-        Router.set('csvFields', fields);
-    }
-
-
     return {
+
+        /**
+         * Functionality:
+         *      - Initializes the needed panels using the headers.
+         *      - Re-renders the panels when a field is selected/disselected.
+         *      - Notifies the Router.
+         * @constructor
+         * @param headers
+         */
         init: function(headers) {
-            saveDefaultValues(headers);
+            attr.fields = headers;
+            saveValues(headers);
 
             renderFieldsToChoose();
-            renderInitialFieldsToScale();
-            renderInitialBlockByField();
+            renderFieldsToScale();
+            renderBlockByField();
 
             $(attr.csvPanel).fadeIn();
             console.log('Csv Fields Input init');
         },
 
+        /**
+         * Hide the csv fields panel.
+         */
         hide: function() {
             $(attr.csvPanel).fadeOut();
             attr = {};

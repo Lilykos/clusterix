@@ -6,6 +6,9 @@ var AlgorithmInput = (function() {
         selectedAlgorithms: []
     };
 
+    /**
+     * Initialize the algorithm drop-down and notify the Router for changes.
+     */
     function initAlgorithmDropdown() {
         $(attr.algSelect).dropdown({
             onChange: function(val, text, selected) {
@@ -17,6 +20,12 @@ var AlgorithmInput = (function() {
     }
 
     return {
+
+        /**
+         * Functionality:
+         *      - Initialize Algorithms panel.
+         * @constructor
+         */
         init: function () {
             initAlgorithmDropdown();
 
