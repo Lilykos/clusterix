@@ -40,7 +40,7 @@ class InputItem(db.Model):
     __tablename__ = 'input_item'
 
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    raw_string = db.Column(db.Text, index=True)
+    raw_string = db.Column(db.Text)
     timestamp = db.Column(db.Text)
 
     # Metadata relationship

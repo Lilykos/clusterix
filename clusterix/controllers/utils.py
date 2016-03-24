@@ -12,8 +12,22 @@ def stringify_no_accents(text):
     return strip_accents(str(text))
 
 
-def get_attr_from_request(files, form):
-    """Get the attributes sent from the frontend."""
+def get_attr_from_request(form):
+    """Get the attributes sent from the frontend (no files)."""
+    return {
+        'algorithms': form.get('algorithms').split(','),
+        'csv_fields': json.loads(form.get('csv_fields')),
+        'block_by': form.get('block_by'),
+        'delimiter': form.get('delimiter'),
+        'vectorizer': form.get('vectorizer'),
+        'k_num': form.get('k_num'),
+        'bcluster_distance': form.get('bcluster_distance'),
+        'affinity': form.get('affinity')
+    }
+
+
+def get_attr_from_request_with_files(files, form):
+    """Get the attributes sent from the frontend (with files)."""
     return {
         'file': files.to_dict()['file'],
         'type': form.get('type'),
@@ -22,7 +36,10 @@ def get_attr_from_request(files, form):
         'csv_fields': json.loads(form.get('csv_fields')),
         'block_by': form.get('block_by'),
         'delimiter': form.get('delimiter'),
-        'vectorizer': form.get('vectorizer')
+        'vectorizer': form.get('vectorizer'),
+        'k_num': form.get('k_num'),
+        'bcluster_distance': form.get('bcluster_distance'),
+        'affinity': form.get('affinity')
     }
 
 

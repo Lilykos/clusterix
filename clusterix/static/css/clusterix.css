@@ -1,14 +1,13 @@
 /************************
  HTML overwrites
  ************************/
-body {
-    background-color: #ecf0f1; /*FlatUI 'Clouds'*/
-}
-
 nav {
     height: 80px;
 }
 
+ul {
+    list-style-type: none;
+}
 
 
 /************************
@@ -50,6 +49,11 @@ nav {
     background-color: #34495e;
 }
 
+#viz-mini:hover {
+    fill-opacity: .4;
+    cursor: hand;
+}
+
 
 /* Process space */
 /*****************/
@@ -58,7 +62,6 @@ nav {
 /* Diagram space */
 /*****************/
 .diagram-container {
-    background-color: white; !important;
     padding-bottom: 100%;
     margin-bottom: -100%;
     overflow: hidden;
@@ -66,6 +69,7 @@ nav {
 
 .minimap:hover {
     fill-opacity: .7;
+    cursor: hand;
 }
 
 .d3-tip {
@@ -82,18 +86,42 @@ nav {
     stroke: #AAA;
     stroke-width: 1px;
 }
-.node {
-    cursor:pointer;
-}
-.dot {
-    opacity: .7;
-    cursor: pointer;
-}
 
 .brush .extent {
-  stroke: #7f8c8d;
-  fill-opacity: .125;
-  shape-rendering: crispEdges;
+    stroke: #7f8c8d;
+    fill-opacity: .125;
+    shape-rendering: crispEdges;
+}
+
+.brushed-area {
+    fill-opacity: .1;
+    shape-rendering: crispEdges;
+}
+
+.chart div {
+    font: 14px sans-serif;
+    text-align: right;
+    padding: 3px;
+    margin: 5px 1px 1px;
+    font-family: "Lato", "proxima-nova", "Helvetica Neue", Arial, sans-serif;
+}
+
+#selections-area ul {
+    height: 150px;
+    width: 1100px;
+
+    float: left;
+    margin-right: -999em;
+    white-space: nowrap;
+    list-style: none;
+    display: block;
+}
+
+#selections-area ul li {
+    margin: 5px;
+    text-align: center;
+    float: left;
+    display: inline;
 }
 
 
@@ -108,14 +136,6 @@ nav {
     display: none;
 }
 
-.white {
-    color: #ffffff;
-}
-
-.blue-background {
-    background-color: #2196f3;
-}
-
 .upper-corner {
     position: fixed;
     top: 10em;
@@ -125,4 +145,8 @@ nav {
 .space-title {
     margin-bottom: 5px;
     font-weight: 300;
+}
+
+.small-font {
+    font-size: small;
 }

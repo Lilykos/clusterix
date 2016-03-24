@@ -7,7 +7,7 @@ from sklearn.feature_extraction.text import HashingVectorizer, TfidfVectorizer, 
 from sklearn.pipeline import make_pipeline, make_union
 
 from ..database.db_funcs import get_items_from_db
-from ..utils.lang import preprocess_text
+from ..utils.lang import tokenize_clean_text, stem
 """General clustering functions."""
 
 
@@ -16,7 +16,7 @@ class FuncTransformer(TransformerMixin):
     def __init__(self, func):
         self.func = func
 
-    def fit(self, X, y):
+    def fit(self, X, y=None):
         return self
 
     def transform(self, X):
@@ -51,18 +51,13 @@ def svd(X):
     return TruncatedSVD().fit_transform(X)
 
 
-def get_vectorizer(name, vocab_list):
+def get_vectorizer(name):
     """Select the vectorizer to use."""
-    if name == 'hasing':
-        vec = HashingVectorizer(n_features=2**12, non_negative=True, norm=None)
-    elif name == 'tfidf':
-        vec = TfidfVectorizer(max_features=2**12, norm=None)
-        vec.fit_transform(vocab_list)
-    else:
-        vec = CountVectorizer(max_features=2**12)
-        vec.fit_transform(vocab_list)
-
-    return vec
+    return {
+        'hashing': HashingVectorizer(n_features=2**12, non_negative=True, norm=None),
+        'tfidf': TfidfVectorizer(max_features=2**12, norm=None),
+        'count': CountVectorizer(max_features=2**12)
+    }[name]
 
 
 def create_input_transformer(fields_with_scaling, cluster_keys, vectorizer):
@@ -74,7 +69,7 @@ def create_input_transformer(fields_with_scaling, cluster_keys, vectorizer):
                 FuncTransformer(partial(get_field, key=key)),  # allowed key
                 vectorizer,
                 FuncTransformer(partial(reweight, scale=get_scale(fields_with_scaling, key)))  # scaling from user
-            ),
+            )
         )
     return make_union(*pipeline)
 
@@ -93,13 +88,13 @@ def get_data(cluster_keys, timestamp):
 
     We have this data list:
         [{
-            'original': {u'City': u'Paris', u'Job': u'Software Dev.', u'Name': u'John'},
+            'original': {u'City': u'Paris', u'Job': u'Software Dev.', u'Name': u'John', 'id': 247890},
             'processed': {u'City': u'pari', u'Job': u'softwar dev', u'Name': u'john'},
             'vocabulary': u'john softwar dev pari'
         },{
-            'original': {u'City': u'Chicago', u'Job': u'Painter', u'Name': u'Tom'},
+            'original': {u'City': u'Chicago', u'Job': u'Painter', u'Name': u'Tom', 'id': 247891},
             'processed': {u'City': u'chicago', u'Job': u'painter', u'Name': u'tom'},
-            'vocabulary': u'tom painter chicago'
+            'vocabulary': u'chicago tom painter'
         }]
 
     :param cluster_keys: The keys that show which features will be used.
@@ -114,6 +109,7 @@ def get_data(cluster_keys, timestamp):
     """
     Let's keep this here for debugging purposes (thread pool does not allow pdb)
         map(partial(_process, cluster_keys=cluster_keys), get_items_from_db(timestamp))
+        kill -9 $(lsof -i :5000 | awk '{print $2}' | tail -n +2)
     """
 
     thread_pool = Pool(cpu_count())
@@ -122,23 +118,29 @@ def get_data(cluster_keys, timestamp):
 
 def _process(item, cluster_keys):
     """This function is to be used by get_data(), it is put in this scope for multithreading."""
-    row_keys = {}
-    row_keys_processed = {}
-    vocabulary = []
+    original = {}
+    processed_stemmed = {}
+    processed_unstemmed = []
 
     # Iterate through all the metadata BUT use only the allowed keys provided by the app
     for metadata in item.input_item_metadata:
         if metadata.name in cluster_keys:
             meta_value = metadata.value
-            processed_value = preprocess_text(meta_value)
+            field = metadata.name
 
-            row_keys['id'] = item.id
-            row_keys[metadata.name] = meta_value
-            row_keys_processed[metadata.name] = ' '.join(processed_value)
-            vocabulary += processed_value
+            # Get both stemmed and unstemmed versions of the words
+            # we need both: clustering and various text specific data (e.g. tfidf output)
+
+            tokenized_val = tokenize_clean_text(meta_value)
+            stemmed_tokenized_val = map(stem, tokenized_val)
+
+            original['id'] = item.id
+            original[field] = meta_value
+            processed_stemmed[field] = ' '.join(stemmed_tokenized_val)
+            processed_unstemmed += tokenized_val
 
     return {
-        'original': row_keys,
-        'processed': row_keys_processed,
-        'vocabulary': ' '.join(vocabulary)
+        'original': original,
+        'processed': processed_stemmed,
+        'vocabulary': ' '.join(processed_unstemmed),
     }

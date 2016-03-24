@@ -5,10 +5,13 @@
     <!-- CSS -->
     <link rel="stylesheet" type="text/css" href="../static/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="../static/css/fileinput.css">
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/styles/default.min.css">
-    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700">
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.8/semantic.min.css">
+    <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/styles/default.min.css">
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Roboto:300,400,500,700">
+    <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.8/semantic.min.css">
+    <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/lightslider/1.1.5/css/lightslider.css">
+
     <link rel="stylesheet" type="text/css" href="../static/css/clusterix.css">
+    <link rel="stylesheet" type="text/css" href="../static/css/clusterix_colors.css">
 
     <!-- JS LIB -->
     <script src="../static/lib/jquery-2.1.4.min.js"></script>
@@ -18,25 +21,35 @@
     <script src="../static/lib/d3-tip.js"></script>
     <script src="../static/lib/papaparse.min.js"></script>
     <script src="../static/lib/fileinput.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/highlight.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.8/semantic.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/lunr.js/0.6.0/lunr.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/highlight.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.8/semantic.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/lunr.js/0.6.0/lunr.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/lightslider/1.1.5/js/lightslider.js"></script>
+
 
     <!-- JS -->
-    <script src="../static/js/diagrams/treemap.js"></script>
+    <script src="../static/js/diagram/treemap/treemap.js"></script>
 
-    <script src="../static/js/inputs/data_input.js"></script>
-    <script src="../static/js/inputs/algorithm_input.js"></script>
-    <script src="../static/js/inputs/csv_fields_input.js"></script>
+    <script src="../static/js/input/data_input.js"></script>
+    <script src="../static/js/input/algorithm_input.js"></script>
+    <script src="../static/js/input/csv_fields_input.js"></script>
 
-    <script src="../static/js/diagrams/treemap.js"></script>
-    <script src="../static/js/diagrams/scatterplot.js"></script>
-    <script src="../static/js/diagrams/diagram_renderer.js"></script>
+    <script src="../static/js/diagram/term_frequency_chart.js"></script>
+    <script src="../static/js/diagram/treemap/treemap.js"></script>
+    <script src="../static/js/diagram/treemap/treemap_mini.js"></script>
+    <script src="../static/js/diagram/scatterplot/scatterplot.js"></script>
+    <script src="../static/js/diagram/scatterplot/scatterplot_mini.js"></script>
+    <script src="../static/js/diagram/scatterplot/scatterplot_brushed.js"></script>
 
-    <script src="../static/js/views/panels.js"></script>
+    <script src="../static/js/render/diagram_renderer.js"></script>
+    <script src="../static/js/render/preview_renderer.js"></script>
+    <script src="../static/js/render/loading_screen_renderer.js"></script>
 
-    <script src="../static/js/search.js"></script>
+    <script src="../static/js/search/search.js"></script>
+    <script src="../static/js/search/search_modifier.js"></script>
+
+
     <script src="../static/js/router.js"></script>
     <script src="../static/js/utils.js"></script>
     <script src="../static/js/init.js"></script>
@@ -53,7 +66,7 @@
 
     <!-- CSV FILE PREVIEW -->
     <script id="csv-file-preview-template" type="text/x-handlebars-template">
-    <table class="table table-hover table-striped">
+    <table class="table table-hover table-striped" id="table-preview">
         <thead>
             <tr>{{#each headers}}<th>{{.}}</th>{{/each}}</tr>
         </thead>
@@ -80,19 +93,72 @@
         <select id="multiple-fields-csv" multiple="" class="ui dropdown selection">
             <option value="">Choose...</option>
             {{#each fields}}
-            <option value="{{.}}">{{.}}</option>
+            <option class="small-font" style="font-size: small" value="{{.}}">{{.}}</option>
             {{/each}}
         </select>
     </script>
 
-    <!-- CSV FILE - FIELDS TO CHOOSE -->
+    <!-- BLOCK BY IN BLOCK CLUSTERING -->
     <script id="block-by-template" type="text/x-handlebars-template">
-        <select id="block-by-field" class="ui dropdown selection">
+        <label for="block-by-field" class="no-padding-left col-lg-3">Block By</label>
+        <select id="block-by-field" class="ui dropdown selection col-lg-9">
             <option value="">Choose...</option>
             {{#each fields}}
-            <option value="{{.}}">{{.}}</option>
+            <option class="small-font" value="{{.}}">{{.}}</option>
             {{/each}}
         </select>
+    </script>
+
+    <!-- TERM FREQUENCY TEMPLATE -->
+    <script id="tf-template" type="text/x-handlebars-template">
+        <div class="panel grey-background">
+            <div class="panel-heading row no-padding-left dark-blue">
+                <h3 class="panel-title col-lg-10">Term Frequencies by cluster</h3>
+                <a class="dark-blue" id="tf-hide" href="#"><span class="glyphicon glyphicon-chevron-up col-lg-2"></span></a>
+            </div>
+            <div class="panel-body" id="tf-body">
+                <div class="panel-group" id="tf-accordion">
+
+                    {{#each clusters}}
+                    <div class="panel panel-default">
+                        <div class="panel-heading"  style="background: {{color}}">
+                            <h5 class="panel-title space-title white"><a data-toggle="collapse" data-parent="#tf-accordion" href="#collapse-tf-{{cluster}}">Cluster {{cluster}}</a></h5>
+                        </div>
+                        <div id="collapse-tf-{{cluster}}" class="panel-collapse collapse">
+                            <div class="panel-body" id="tf-cluster-{{cluster}}"></div>
+                        </div>
+                    </div>
+                    {{/each}}
+
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <!-- TF-IDF TEMPLATE -->
+    <script id="tf-idf-template" type="text/x-handlebars-template">
+        <div class="panel grey-background">
+            <div class="panel-heading row no-padding-left dark-blue">
+                <h3 class="panel-title col-lg-10">TF-IDF by cluster</h3>
+                <a class="dark-blue" id="tf-idf-hide" href="#"><span class="glyphicon glyphicon-chevron-up col-lg-2"></span></a>
+            </div>
+            <div class="panel-body" id="tf-idf-body">
+                <div class="panel-group" id="tf-idf-accordion">
+
+                    {{#each clusters}}
+                    <div class="panel panel-default">
+                        <div class="panel-heading"  style="background: {{color}}">
+                            <h5 class="panel-title space-title white"><a data-toggle="collapse" data-parent="#tf-idf-accordion" href="#collapse-tf-idf-{{cluster}}">Cluster {{cluster}}</a></h5>
+                        </div>
+                        <div id="collapse-tf-idf-{{cluster}}" class="panel-collapse collapse">
+                            <div class="panel-body" id="tf-idf-cluster-{{cluster}}"></div>
+                        </div>
+                    </div>
+                    {{/each}}
+
+                </div>
+            </div>
+        </div>
     </script>
     {% endraw %}
     <!--------------------------------->
@@ -137,31 +203,37 @@
     <div class="col-lg-3">
         <h2 class="space-title">Processing Space</h2>
 
+
+
+
         <!-- DATA INPUT PANEL -->
-        <div class="panel panel-primary">
-            <div class="panel-heading row no-padding-left">
+        <div class="panel grey-background">
+            <div class="panel-heading row no-padding-left light-blue">
                 <h3 class="panel-title col-lg-11">Data Input</h3>
-                <a class="white" id="data-input-hide" href="#"><span class="glyphicon glyphicon-chevron-up col-lg-1"></span></a>
+                <a id="data-input-hide" href="#"><span class="glyphicon glyphicon-chevron-up col-lg-1"></span></a>
             </div>
-            <div class="panel-body" id="data-input-body">
+            <div class="panel-body grey-background" id="data-input-body">
                 <label class="control-label">Select File</label>
                 <input id="data-input" type="file">
             </div>
         </div>
 
+
+
+
         <!-- CSV FIELDS PANEL -->
-        <div class="panel panel-warning no-display" id="csv-fields-panel">
-            <div class="panel-heading row no-padding-left">
+        <div class="panel no-display grey-background" id="csv-fields-panel">
+            <div class="panel-heading row no-padding-left dark-green">
                 <h3 class="panel-title col-lg-11">CSV Fields Options</h3>
-                <a class="white" id="csv-fields-hide" href="#"><span class="glyphicon glyphicon-chevron-up col-lg-1"></span></a>
+                <a class="dark-green" id="csv-fields-hide" href="#"><span class="glyphicon glyphicon-chevron-up col-lg-1"></span></a>
             </div>
-            <div class="panel-body" id="csv-fields-body">
-                <div class="panel-group" id="accordion">
+            <div class="panel-body grey-background" id="csv-fields-body">
+                <div class="panel-group" id="csv-accordion">
 
                     <!-- CHOOSE FIELD OPTIONS -->
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            <h5 class="panel-title space-title"><a data-toggle="collapse" data-parent="#accordion" href="#collapse-fields">Choose fields for clustering</a></h5>
+                            <h5 class="panel-title space-title"><a data-toggle="collapse" data-parent="#csv-accordion" href="#collapse-fields">Choose fields for clustering</a></h5>
                         </div>
                         <div id="collapse-fields" class="panel-collapse collapse in">
                             <div class="panel-body" id="csv-fields-container"></div>
@@ -171,50 +243,129 @@
                     <!-- SCALING OPTIONS -->
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            <h5 class="panel-title space-title"><a data-toggle="collapse" data-parent="#accordion" href="#collapse-scaling">Scale the chosen fields</a></h5>
+                            <h5 class="panel-title space-title"><a data-toggle="collapse" data-parent="#csv-accordion" href="#collapse-scaling">Scale the chosen fields</a></h5>
                         </div>
                         <div id="collapse-scaling" class="panel-collapse collapse">
                             <div class="panel-body" id="scale-fields-container"></div>
                         </div>
                     </div>
 
-                    <!-- BLOCK BY FIELD SELECTION -->
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h5 class="panel-title space-title"><a data-toggle="collapse" data-parent="#accordion" href="#collapse-block-by">Block by field</a></h5>
-                        </div>
-                        <div id="collapse-block-by" class="panel-collapse collapse">
-                            <div class="panel-body" id="block-by-container"></div>
-                        </div>
-                    </div>
-
                 </div>
             </div>
         </div>
 
+
+
+
         <!-- ALGORITHMS AND DEFINITIONS PANEL -->
-        <div class="panel panel-success no-display" id="algorithms-panel">
-            <div class="panel-heading row no-padding-left">
+        <div class="panel no-display grey-background" id="algorithms-panel">
+            <div class="panel-heading row no-padding-left orange">
                 <h3 class="panel-title col-lg-11">Algorithm Definitions & Options</h3>
-                <a class="white" href="#" id="algorithms-hide"><span class="glyphicon glyphicon-chevron-up col-lg-1"></span></a>
+                <a class="orange" id="algorithms-hide" href="#"><span class="glyphicon glyphicon-chevron-up col-lg-1"></span></a>
             </div>
 
             <!-- ALGORITHM OPTIONS -->
-            <div class="panel-body" id="algorithms-body">
+            <div class="panel-body grey-background" id="algorithms-body">
                 <div class=" form-group row">
                     <label for="algorithms-selection" class="no-padding-left col-lg-3">Algorithms</label>
                     <select id="algorithms-selection" multiple="" class="ui dropdown selection col-lg-9">
                         <option value="">Choose...</option>
-                        <option value="kmeans">K-Means</option>
-                        <option value="bcluster">Block Clustering</option>
+                        <option class="small-font" value="kmeans">K-Means</option>
+                        <option class="small-font" value="bcluster">Block Clustering</option>
                     </select>
                 </div>
+
+                <!-- VECTORIZER SELECTION -->
+                <div class="form-group row">
+                    <label for="vectorizer-selection" class="no-padding-left col-lg-3">Vectorizer</label>
+                    <select id="vectorizer-selection" class="ui dropdown selection col-lg-9">
+                        <option value="">Choose...</option>
+                        <option class="small-font" value="count">Count Vectorizer</option>
+                        <option class="small-font" value="hashing">Hashing Vectorizer</option>
+                        <option class="small-font" value="tfidf">Tfidf Vectorizer</option>
+                    </select>
+                </div>
+
+                <div class="panel-group" id="algorithm-accordion">
+                    <!-- KMEANS -->
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h5 class="panel-title space-title"><a data-toggle="collapse" data-parent="#algorithm-accordion" href="#collapse-kmeans-options">K-Means</a></h5>
+                        </div>
+                        <div id="collapse-kmeans-options" class="panel-collapse collapse">
+                            <div class="panel-body" id="kmeans-options-container">
+                                <div class="form-group">
+                                    <label class="control-label" for="scale">K Number</label>
+                                    <input class="form-control input-sm" id="kmeans-num" type="number" value="1">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- BLOCK CLUSTERING -->
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h5 class="panel-title space-title"><a data-toggle="collapse" data-parent="#algorithm-accordion" href="#collapse-bcluster-options">Block Clustering</a></h5>
+                        </div>
+                        <div id="collapse-bcluster-options" class="panel-collapse collapse">
+                            <div class="panel-body" id="bcluster-options-container">
+                                <!-- BLOCK BY -->
+                                <div id="block-by-container" class="form-group row"></div>
+                                <!-- DISTANCE METHODS -->
+                                <div class="form-group row">
+                                    <label for="distance-method-selection" class="no-padding-left col-lg-3">Distance Methods</label>
+                                    <select id="distance-method-selection" class="ui dropdown selection col-lg-9">
+                                        <option value="">Choose...</option>
+                                        <option value="single">Single</option>
+                                        <option value="complete">Complete</option>
+                                        <option value="average">Average</option>
+                                        <option value="weighted">Weighted</option>
+                                        <option value="centroid">Centroid</option>
+                                        <option value="median">Median</option>
+                                        <option value="ward">Ward</option>
+                                    </select>
+                                </div>
+                                <!-- AFFINITY METHODS -->
+                                <div class="form-group row" id="affinity-container">
+                                    <label for="affinity-selection" class="no-padding-left col-lg-3">Affinity</label>
+                                    <select id="affinity-selection" class="ui dropdown selection col-lg-9">
+                                        <option value="">Choose...</option>
+                                        <option value="euclidean">Euclidean</option>
+                                        <option value="cityblock">City block/Manhattan</option>
+                                        <option value="seuclidean">Standardized Euclidean</option>
+                                        <option value="cosine">Cosine</option>
+                                        <option value="correlation">Correlation</option>
+                                        <option value="hamming">Hamming</option>
+                                        <option value="jaccard">Jaccard</option>
+                                        <option value="chebyshev">Chebyshev</option>
+                                        <option value="canberra">Canberra</option>
+                                        <option value="braycurtis">Bray-Curtis</option>
+                                        <option value="mahalanobis">Mahalanobis</option>
+                                        <option value="yule">Yule</option>
+                                        <option value="matching">Matching</option>
+                                        <option value="dice">Dice</option>
+                                        <option value="kulsinski">Kulsinski</option>
+                                        <option value="rogerstanimoto">Rogers-Tanimoto</option>
+                                        <option value="russellrao">Russell-Rao</option>
+                                        <option value="sokalmichener">Sokal-Michener</option>
+                                        <option value="sokalsneath">Sokal-Sneath</option>
+                                        <option value="wminkowski">Weighted Minkowski</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
 
         <!-- UPLOAD & CLUSTER BUTTON -->
         <a href="#" class="btn btn-warning btn-lg btn-block no-display" id="upload">
             <span class="glyphicon glyphicon-th"></span> Upload and Cluster Data
+        </a>
+        <a href="#" class="btn btn-warning btn-lg btn-block" id="load-test">
+            <span class="glyphicon glyphicon-th"></span> load screen
         </a>
 
     </div>
@@ -223,14 +374,17 @@
     <!--------------------------------->
     <!-- DIAGRAM SPACE -->
     <!--------------------------------->
-    <div class="col-lg-9 diagram-container">
+    <div class="col-lg-9 diagram-container grey-background">
         <div class="row">
             <h2 class="space-title">Visualization Swatchboard</h2>
-            <div class="col-lg-3">
+            <div class="col-lg-2">
                 <div id="viz-mini"></div>
             </div>
-            <div class="col-lg-9">
-                <div id="viz"></div>
+            <div class="col-lg-10">
+                <div id="vizualization-area" class="row"></div>
+                <div id="selections-area" class="row"><ul></ul></div>
+                <div id="selections-area-info" class="row">
+                </div>
             </div>
         </div>
     </div>
@@ -243,9 +397,9 @@
 
 <!-- DATA PREVIEW MODAL -->
 <div id="data-preview-modal" class="modal fade" role="dialog" tabindex='-1'>
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-preview">
         <div class="modal-content">
-            <div class="modal-header blue-background">
+            <div class="modal-header light-blue-background">
                 <h4 class="modal-title white">Data Preview</h4>
             </div>
             <div class="modal-body" id="data-modal-content"></div>
@@ -256,10 +410,172 @@
     </div>
 </div>
 
+<!-- LOADING SCREEN DIMMER -->
+<div class="ui dimmer" id="loading-screen-dimmer">
+    <div class="content">
+        <div class="center">
+        <div id="clusterix_loader">
+        <svg x="0px" y="0px" width="300" height="300" viewBox="0 0 55.561 69.058"
+	                style="enable-background:new 0 0 55.561 69.058;" xml:space="preserve">
+            <g>
+                <circle style="fill:#35495E;" cx="6.888" cy="48.152" r="1.546"/>
+                <circle style="fill:#35495E;" cx="6.229" cy="45.373" r="0.888"/>
+                <circle style="fill:#2C3E50;" cx="8.734" cy="41.931" r="2.817"/>
+                <circle style="fill:#35495E;" cx="17.868" cy="45.16" r="2.817"/>
+                <circle style="fill:#35495E;" cx="8.253" cy="45.854" r="0.692"/>
+                <circle style="fill:#2C3E50;" cx="13.835" cy="39.714" r="1.865"/>
+                <circle style="fill:#35495E;" cx="47.09" cy="43.377" r="2.887"/>
+                <circle style="fill:#35495E;" cx="49.977" cy="47.238" r="0.888"/>
+                <circle style="fill:#35495E;" cx="13.835" cy="46.35" r="0.875"/>
+                <circle style="fill:#35495E;" cx="42.963" cy="46.35" r="1.191"/>
+                <circle style="fill:#2C3E50;" cx="9.935" cy="35.749" r="2.817"/>
+                <circle style="fill:#2C3E50;" cx="10.529" cy="30.56" r="1.795"/>
+                <circle style="fill:#35495E;" cx="12.959" cy="43.794" r="1.409"/>
+                <circle style="fill:#2C3E50;" cx="19.102" cy="39.113" r="2.817"/>
+                <circle style="fill:#2C3E50;" cx="28.856" cy="17.746" r="2.817"/>
+                <circle style="fill:#2C3E50;" cx="37.677" cy="18.685" r="2.817"/>
+                <circle style="fill:#2C3E50;" cx="26.038" cy="13.549" r="1.409"/>
+                <circle style="fill:#2C3E50;" cx="29.537" cy="13.549" r="0.888"/>
+                <circle style="fill:#2C3E50;" cx="33.538" cy="14.929" r="1.865"/>
+                <circle style="fill:#35495E;" cx="39.156" cy="45.659" r="1.865"/>
+                <circle style="fill:#35495E;" cx="10.599" cy="47.238" r="1.865"/>
+                <circle style="fill:#2C3E50;" cx="22.494" cy="16.001" r="1.431"/>
+                <circle style="fill:#2C3E50;" cx="14.506" cy="35.255" r="1.546"/>
+                <circle style="fill:#2C3E50;" cx="13.847" cy="32.476" r="0.888"/>
+                <circle style="fill:#2C3E50;" cx="16.352" cy="29.033" r="2.817"/>
+                <circle style="fill:#2C3E50;" cx="23.361" cy="34.811" r="2.817"/>
+                <circle style="fill:#2C3E50;" cx="21.113" cy="26.477" r="1.525"/>
+                <circle style="fill:#2C3E50;" cx="17.553" cy="35.255" r="0.875"/>
+                <circle style="fill:#2C3E50;" cx="16.677" cy="22.852" r="2.817"/>
+                <circle style="fill:#2C3E50;" cx="18.147" cy="17.662" r="1.795"/>
+                <circle style="fill:#2C3E50;" cx="19.102" cy="32.932" r="1.409"/>
+                <circle style="fill:#2C3E50;" cx="25.46" cy="29.351" r="1.772"/>
+                <circle style="fill:#2C3E50;" cx="11.551" cy="26.216" r="1.865"/>
+                <circle style="fill:#2C3E50;" cx="21.286" cy="29.987" r="1.208"/>
+                <circle style="fill:#2C3E50;" cx="21.708" cy="19.594" r="1.444"/>
+                <circle style="fill:#2C3E50;" cx="33.084" cy="18.685" r="0.888"/>
+                <circle style="fill:#35495E;" cx="21.977" cy="46.35" r="1.191"/>
+                <circle style="fill:#2C3E50;" cx="23.151" cy="42.866" r="1.865"/>
+                <circle style="fill:#2C3E50;" cx="24.63" cy="18.151" r="0.444"/>
+                <circle style="fill:#2C3E50;" cx="41.022" cy="40.49" r="2.887"/>
+                <circle style="fill:#2C3E50;" cx="26.038" cy="23.843" r="3.039"/>
+                <circle style="fill:#2C3E50;" cx="21.286" cy="22.852" r="0.444"/>
+                <circle style="fill:#2C3E50;" cx="46.068" cy="38.111" r="1.865"/>
+                <circle style="fill:#2C3E50;" cx="36.406" cy="42.866" r="1.546"/>
+                <circle style="fill:#2C3E50;" cx="26.882" cy="39.113" r="1.865"/>
+                <circle style="fill:#2C3E50;" cx="30.425" cy="33.364" r="3.377"/>
+                <circle style="fill:#2C3E50;" cx="36.406" cy="25.23" r="2.817"/>
+                <circle style="fill:#35495E;" cx="27.447" cy="44.748" r="1.929"/>
+                <circle style="fill:#2C3E50;" cx="31.673" cy="22.413" r="1.865"/>
+                <circle style="fill:#2C3E50;" cx="41.773" cy="22.852" r="1.865"/>
+                <circle style="fill:#2C3E50;" cx="30.943" cy="27.579" r="1.865"/>
+                <circle style="fill:#2C3E50;" cx="42.634" cy="28.377" r="3.147"/>
+                <circle style="fill:#35495E;" cx="32.196" cy="45.203" r="1.865"/>
+                <circle style="fill:#2C3E50;" cx="32.196" cy="39.977" r="2.354"/>
+                <circle style="fill:#2C3E50;" cx="34.061" cy="29.444" r="1.208"/>
+                <circle style="fill:#2C3E50;" cx="36.406" cy="39.463" r="1.351"/>
+                <circle style="fill:#35495E;" cx="35.648" cy="46.505" r="1.107"/>
+                <circle style="fill:#35495E;" cx="28.649" cy="41.58" r="0.468"/>
+                <circle style="fill:#2C3E50;" cx="37.455" cy="30.151" r="1.271"/>
+                <circle style="fill:#2C3E50;" cx="46.068" cy="33.287" r="1.865"/>
+                <circle style="fill:#2C3E50;" cx="37.15" cy="34.639" r="2.609"/>
+                <circle style="fill:#2C3E50;" cx="41.773" cy="33.287" r="1.271"/>
+                <circle style="fill:#2C3E50;" cx="42.963" cy="36.13" r="1.271"/>
+                <g>
+                    <circle style="fill:#E57E25;" cx="6.229" cy="21.83" r="1.795"/>
+                    <circle style="fill:#E57E25;" cx="2.649" cy="18.72" r="0.444"/>
+                    <circle style="fill:#E57E25;" cx="4.88" cy="18.151" r="1.334"/>
+                    <circle style="fill:#E57E25;" cx="4.444" cy="15.513" r="0.898"/>
+                    <circle style="fill:#E57E25;" cx="2.649" cy="16.899" r="0.898"/>
+                    <circle style="fill:#E57E25;" cx="2.34" cy="14.616" r="0.898"/>
+                    <circle style="fill:#E57E25;" cx="8.024" cy="24.278" r="0.898"/>
+                    <circle style="fill:#E57E25;" cx="3.546" cy="20.466" r="0.898"/>
+                    <circle style="fill:#E57E25;" cx="3.753" cy="13.718" r="0.516"/>
+                    <circle style="fill:#E57E25;" cx="6.659" cy="19.164" r="0.444"/>
+                    <circle style="fill:#E57E25;" cx="5.666" cy="25.176" r="1.232"/>
+                    <circle style="fill:#E57E25;" cx="7.561" cy="26.216" r="0.516"/>
+                    <circle style="fill:#E57E25;" cx="4.88" cy="27.579" r="0.898"/>
+                    <circle style="fill:#E57E25;" cx="4.434" cy="23.625" r="0.479"/>
+                    <circle style="fill:#E57E25;" cx="6.888" cy="28.081" r="0.898"/>
+                    <circle style="fill:#E57E25;" cx="5.932" cy="30.95" r="1.195"/>
+                    <circle style="fill:#E57E25;" cx="3.546" cy="22.413" r="0.479"/>
+                    <circle style="fill:#E57E25;" cx="2.193" cy="11.698" r="1.339"/>
+                    <circle style="fill:#E57E25;" cx="1.387" cy="9.078" r="0.874"/>
+                    <circle style="fill:#E57E25;" cx="0.719" cy="6.898" r="0.719"/>
+                    <circle style="fill:#E57E25;" cx="0.719" cy="5.316" r="0.444"/>
+                    <circle style="fill:#E57E25;" cx="1.387" cy="3.618" r="0.62"/>
+                    <circle style="fill:#E57E25;" cx="1.751" cy="1.886" r="0.479"/>
+                    <circle style="fill:#E57E25;" cx="2.013" cy="0.404" r="0.262"/>
+                    <circle style="fill:#E57E25;" cx="1.751" cy="4.872" r="0.262"/>
+                    <circle style="fill:#E57E25;" cx="1.751" cy="5.76" r="0.384"/>
+                </g>
+                <g>
+                    <circle style="fill:#E57E25;" cx="49.332" cy="21.687" r="1.795"/>
+                    <circle style="fill:#E57E25;" cx="52.913" cy="18.577" r="0.444"/>
+                    <circle style="fill:#E57E25;" cx="50.681" cy="18.008" r="1.334"/>
+                    <circle style="fill:#E57E25;" cx="51.117" cy="15.371" r="0.898"/>
+                    <circle style="fill:#E57E25;" cx="52.913" cy="16.757" r="0.898"/>
+                    <circle style="fill:#E57E25;" cx="53.221" cy="14.473" r="0.898"/>
+                    <circle style="fill:#E57E25;" cx="47.537" cy="24.136" r="0.898"/>
+                    <circle style="fill:#E57E25;" cx="52.015" cy="20.324" r="0.898"/>
+                    <circle style="fill:#E57E25;" cx="51.808" cy="13.576" r="0.516"/>
+                    <circle style="fill:#E57E25;" cx="48.902" cy="19.021" r="0.444"/>
+                    <circle style="fill:#E57E25;" cx="49.896" cy="25.033" r="1.232"/>
+                    <circle style="fill:#E57E25;" cx="48.001" cy="26.074" r="0.516"/>
+                    <circle style="fill:#E57E25;" cx="50.681" cy="27.437" r="0.898"/>
+                    <circle style="fill:#E57E25;" cx="51.127" cy="23.483" r="0.479"/>
+                    <circle style="fill:#E57E25;" cx="48.673" cy="27.939" r="0.898"/>
+                    <circle style="fill:#E57E25;" cx="49.629" cy="30.808" r="1.195"/>
+                    <circle style="fill:#E57E25;" cx="52.015" cy="22.27" r="0.479"/>
+                    <circle style="fill:#E57E25;" cx="53.368" cy="11.556" r="1.339"/>
+                    <circle style="fill:#E57E25;" cx="54.174" cy="8.935" r="0.874"/>
+                    <circle style="fill:#E57E25;" cx="54.842" cy="6.756" r="0.719"/>
+                    <circle style="fill:#E57E25;" cx="54.842" cy="5.174" r="0.444"/>
+                    <circle style="fill:#E57E25;" cx="54.174" cy="3.476" r="0.62"/>
+                    <circle style="fill:#E57E25;" cx="53.81" cy="1.744" r="0.479"/>
+                    <circle style="fill:#E57E25;" cx="53.549" cy="0.262" r="0.262"/>
+                    <circle style="fill:#E57E25;" cx="53.81" cy="4.73" r="0.262"/>
+                    <circle style="fill:#E57E25;" cx="53.81" cy="5.618" r="0.384"/>
+                </g>
+                <circle style="fill:#E57E25;" cx="41.793" cy="61.725" r="1.208"/>
+                <circle style="fill:#E57E25;" cx="39.643" cy="60.512" r="0.604"/>
+                <circle style="fill:#E57E25;" cx="43.768" cy="64.146" r="1.208"/>
+                <circle style="fill:#E57E25;" cx="40.746" cy="64.29" r="1.208"/>
+                <circle style="fill:#E57E25;" cx="36.452" cy="58.39" r="0.604"/>
+                <circle style="fill:#E57E25;" cx="36.892" cy="60.813" r="1.208"/>
+                <circle style="fill:#E57E25;" cx="34.582" cy="57.782" r="0.604"/>
+                <circle style="fill:#E57E25;" cx="33.37" cy="59.592" r="1.208"/>
+                <circle style="fill:#E57E25;" cx="39.331" cy="62.248" r="0.752"/>
+                <circle style="fill:#E57E25;" cx="30.514" cy="58.377" r="1.208"/>
+                <circle style="fill:#E57E25;" cx="42.455" cy="65.804" r="0.604"/>
+                <circle style="fill:#E57E25;" cx="12.993" cy="61.589" r="0.604"/>
+                <circle style="fill:#E57E25;" cx="15.577" cy="61.897" r="1.208"/>
+                <circle style="fill:#E57E25;" cx="17.732" cy="60.694" r="0.604"/>
+                <circle style="fill:#E57E25;" cx="13.591" cy="64.309" r="1.208"/>
+                <circle style="fill:#E57E25;" cx="16.612" cy="64.467" r="1.208"/>
+                <circle style="fill:#E57E25;" cx="20.933" cy="58.587" r="0.604"/>
+                <circle style="fill:#E57E25;" cx="20.482" cy="61.008" r="1.208"/>
+                <circle style="fill:#E57E25;" cx="23.697" cy="58.361" r="0.604"/>
+                <circle style="fill:#E57E25;" cx="23.658" cy="60.476" r="1.208"/>
+                <circle style="fill:#E57E25;" cx="18.037" cy="62.431" r="0.752"/>
+                <circle style="fill:#E57E25;" cx="26.872" cy="58.6" r="1.208"/>
+                <circle style="fill:#E57E25;" cx="14.896" cy="65.973" r="0.604"/>
+                <circle style="fill:#E57E25;" cx="19.631" cy="64.169" r="1.208"/>
+                <circle style="fill:#E57E25;" cx="37.79" cy="64.132" r="1.208"/>
+                <circle style="fill:#E57E25;" cx="40.741" cy="66.636" r="0.752"/>
+                <circle style="fill:#E57E25;" cx="34.574" cy="61.407" r="0.604"/>
+                <circle style="fill:#E57E25;" cx="12.955" cy="67.325" r="1.208"/>
+                <circle style="fill:#E57E25;" cx="42.987" cy="67.85" r="1.208"/>
+            </g>
+            </svg>
+            </div>
+            <br><br>
+            <div id="loading-screen-msg">Loading...</div>
+        </div>
+    </div>
+</div>
 
-<!--------------------------------->
-<!-- ALERTS -->
-<!--------------------------------->
-<div id="alert-dock"></div>
+
+
 </body>
 </html>

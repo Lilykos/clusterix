@@ -1,14 +1,7 @@
 var DataInput = (function() {
     var attr = {
-        // Selectors
         dataInput: '#data-input',
-        dataPreview: '#data-preview',
-        modalInit: 'data-preview-modal',
-        modalContent: '#data-modal-content',
-
-        // Template Selectors
-        txtTemplate: '#txt-file-preview-template',
-        csvTemplate: '#csv-file-preview-template'
+        dataPreview: '#data-preview'
     };
 
     var fileInputConfig = {
@@ -22,7 +15,7 @@ var DataInput = (function() {
         uploadIcon: '<span class="glyphicon glyphicon-eye-open"></span> ',
         layoutTemplates: {
             main1: "{preview}<div class='input-group {class}'>" +
-            "<div class='input-group-btn'>{browse}" +
+            "<div class='input-group-btn'><span class='light-blue'>{browse}</span>" +
             "<span id='data-preview' data-toggle='modal' data-target='#data-preview-modal'>{upload}</span>" +
             "{remove}</div>{caption}</div>"
         }
@@ -35,49 +28,12 @@ var DataInput = (function() {
     function initModalPreview() {
         switch (attr.fileType) {
             case 'text/plain':
-                render_txt();
+                PreviewRenderer.renderTxt(attr.file);
                 break;
             case 'text/csv':
-                render_csv();
+                PreviewRenderer.renderCsv(attr.file);
                 break;
         }
-    }
-
-    /**
-     * Creates a new File Reader (for text files only), and parses the text.
-     * Then renders the modal with the data preview.
-     */
-    function render_txt() {
-        var reader = new FileReader();
-        reader.onload = function() {
-            attr.fileTxt =  reader.result;
-            Utils.compileTemplate(attr.txtTemplate, attr.modalContent, {data: attr.fileTxt});
-        };
-        reader.readAsText(attr.file);
-
-        // Hide the (possible) previous csv panel.
-        CsvFieldsInput.hide();
-    }
-
-    /**
-     * Parses the CSV file using Papaparse and renders the modal with the preview.
-     */
-    function render_csv() {
-        Papa.parse(attr.file, { dynamicTyping: true, preview: 100,
-            complete: function(results) {
-                var headers = results.data.shift();
-                var delimiter = results.meta.delimiter;
-                var data = results.data;
-
-                Utils.compileTemplate(attr.csvTemplate, attr.modalContent, {headers:headers, data:data});
-                Router.set('delimiter', delimiter);
-
-                /**
-                 * Render the csv panel. We do this here because we need the headers (fields).
-                 */
-                CsvFieldsInput.init(headers);
-            }
-        });
     }
 
     return {
@@ -85,7 +41,7 @@ var DataInput = (function() {
         /**
          * Functionality:
          *      - 1st step of the workflow. Creates the file input, checks for acceptable files.
-         *      - Renders a preview of the file content, using modals.
+         *      - Renders a preview of the file content, by calling the PreviewRenderer.
          *      - Sends file to the router for keeping.
          *      - Calls the next parts of the workflow CSV Field Options (if csv) and Algorithm Input.
          * @constructor
@@ -108,6 +64,8 @@ var DataInput = (function() {
                     AlgorithmInput.init();
                 });
 
+            // Panel hide/show
+            Utils.attachSliderToPanel('#data-input-hide', '#data-input-body', 150);
             console.log('Data Input init');
         }
     }

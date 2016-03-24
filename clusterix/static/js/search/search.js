@@ -1,17 +1,12 @@
 var Search = (function() {
+    var ids;
     var index;
     var store;
     var fields;
     var fieldNames;
 
-    var searchSelector = '#search';
-
-    var colors = {
-        grey: '#95a5a6', // FlatUI 'Concrete'
-        blue: '#4aa3df'  // FlatUI 'Peter River'
-    };
-
     var oldElements;
+    var searchSelector = '#search';
 
     /**
      * Every time a new file is uploaded, initialize lunr, using the fields of the uploaded file
@@ -21,7 +16,7 @@ var Search = (function() {
         $(document).on('data-uploaded', function(ev, fields_used) {
             fields = fields_used.data;
             fieldNames = fields.map(function (field) {return field.name});
-            store = {};
+            store = {allIDs: []};
 
             index = lunr(function() {
                 var $this = this;
@@ -44,22 +39,12 @@ var Search = (function() {
             var query = $(this).val().toLowerCase();
             var newElements = search(query).map(function(i) { return i.ref; });
 
-            // Array difference functions, in orderto figure out:
-            //      1. New elements that need to be colored.
-            //      2. Old elements that need to revert to the original coloring.
-            Utils.arrayDifference(oldElements, newElements).map(function(id) {
-                $('.' + id).get().forEach(function(el) {
-                    $(el).attr('fill', $(el).attr('fillbackup'));
-                });
-            });
+            SearchModifier.colorNewElements(newElements, oldElements);
+            //SearchModifier.restoreUnusedElements(newElements, oldElements);
+            SearchModifier.restoreUnusedElements(Search.data().store.allIDs, newElements);
 
-            Utils.arrayDifference(newElements, oldElements).map(function(id) {
-                $('.' + id).attr('fill', colors.blue);
-            });
-
-            // Replace the used elements for the next iteration
             oldElements = newElements;
-        }, 500));
+        }, 250));
     }
 
     /**
@@ -94,6 +79,7 @@ var Search = (function() {
         addToIndex: function(content) {
             if (Utils.inArray(content.id, Object.keys(store))) return;
 
+
             var item = {id: content.id};
             fieldNames.forEach(function(field) {
                 item[field] = content[field]
@@ -101,6 +87,9 @@ var Search = (function() {
 
             index.add(item);
             store[item.id] = content;
+            store.allIDs.push(
+                parseInt(item.id)
+            )
         },
 
         /**
@@ -108,7 +97,7 @@ var Search = (function() {
          * @returns {{index: *, store: *, fields: *}}
          */
         data: function() {
-            return {index: index, store: store, fields: fields}
+            return {index: index, store: store, fields: fields, ids: ids}
         },
 
         /**

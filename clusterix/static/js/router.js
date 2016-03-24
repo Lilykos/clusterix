@@ -1,24 +1,46 @@
 var Router = (function() {
     var attr = {
         alertTemplate: '#alert-template',
-        url: '/upload',
-        upload: '#upload'
-    };
+        upload: '#upload',
 
-    var dataFileInfo = {empty: true};
+        urlUploadFile: '/upload',
+        urlUploadDataOnly: '/upload_data'
+    };
 
     var dataModel = {
         blockBy: '',
         delimiter: ',',
+
+        /* 3 vectorizer options:
+           Count, Hashing, Tfidf
+         */
+        vectorizer: 'count',
+
+        /* Number of Ks for K-Means Clustering
+         */
+        kNumber: 1,
+
+        /* Block Clustering distance method
+         */
+        bclusterDistance: 'single',
+
+        /* Affinity distance methods (pairwise)
+         */
+        affinity: 'euclidean',
+
         /* Algorithms Representation:
            algorithms: ['K-Means', ...]
          */
         algorithms: [],
+
         /* Csv Fields Representation:
            csvFields: [{name: 'PassengerID', scale: 1}, ...]
          */
         csvFields: []
     };
+
+    var newFile;
+    var dataFileInfo = {empty: true};
 
     /**
      * Checks for validity, based on certain rules.
@@ -46,25 +68,44 @@ var Router = (function() {
     function upload() {
         var data = new FormData();
 
-        data.append('file', dataFileInfo.file);
-        data.append('type', dataFileInfo.file.type);
-        data.append('timestamp', dataFileInfo.timestamp);
         data.append('algorithms', dataModel.algorithms);
+        data.append('vectorizer', dataModel.vectorizer);
+        data.append('k_num', dataModel.kNumber);
+        data.append('bcluster_distance', dataModel.bclusterDistance);
+        data.append('affinity', dataModel.affinity);
+
         data.append('csv_fields', JSON.stringify(dataModel.csvFields));
         data.append('block_by', dataModel.blockBy);
         data.append('delimiter', dataModel.delimiter);
 
+        // If newFile == true, send the file
+        // Else, do not send it and use the route that will
+        // get the data without preprocessing
+        var url;
+        if (newFile) {
+            data.append('file', dataFileInfo.file);
+            data.append('type', dataFileInfo.file.type);
+            data.append('timestamp', dataFileInfo.timestamp);
+
+            url = attr.urlUploadFile;
+            newFile = false;
+        } else {
+            url = attr.urlUploadDataOnly;
+        }
+
         $.ajax({
             type: 'POST',
-            url: attr.url,
+            url: url,
             data: data,
             cache: false,
             contentType: false,
             processData: false,
             success: function(data){
                 Renderer.render(data);
+                LoadingScreenRenderer.removeLoadingScreen();
             }
         });
+        LoadingScreenRenderer.initLoadingScreen();
     }
 
     return {
@@ -92,6 +133,11 @@ var Router = (function() {
                 fileName: file.name,
                 timestamp: new Date().getTime()
             };
+
+            // We set the newFile variable. If true, we upload the file,
+            // else we upload just the data and use the previously created
+            // json file to produce the results.
+            newFile = true;
             console.log('-- Router received: file: ' + dataFileInfo.fileName);
         },
 

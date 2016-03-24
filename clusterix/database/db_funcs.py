@@ -1,4 +1,4 @@
-from ..utils.clx_logging import log_info
+from clusterix import log_info
 from ..controllers.utils import stringify_no_accents
 from .models import db, InputItem, InputItemMetadata
 """Functions that save/retrieve data to the database."""
@@ -41,8 +41,7 @@ def save_csv_to_db(cols, data, timestamp):
             )
             db.session.add(input_item)
 
-    log_info(
-        'Saved {} input items in the db.'.format(len(data)))
+    log_info('Saved {} input items in the db.'.format(len(data)))
     db.session.commit()
 
 

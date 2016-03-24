@@ -1,9 +1,13 @@
+import re
 from nltk.corpus import stopwords
 from nltk.stem.porter import PorterStemmer
-from nltk import word_tokenize
+from nltk import word_tokenize, sent_tokenize
 
 from unidecode import unidecode
 """General language functions."""
+
+
+stemmer = PorterStemmer()
 
 
 def strip_accents(string):
@@ -93,9 +97,14 @@ def strip_accents(string):
         return _translate_to_ascii(string.encode('utf-8'))[0]
 
 
-def preprocess_text(text):
+def stem(word):
+    """Stemming method."""
+    return stemmer.stem(word)
+
+
+def tokenize_clean_text(text):
     """
-    Basic NLP string processing. Tokenization, removal of stopwords/special characters, stemming.
+    Basic NLP string processing. Tokenization, removal of stopwords/special characters.
 
     :param text: The input text for processing.
     :type text: str
@@ -103,10 +112,11 @@ def preprocess_text(text):
     :return: A string containing the tokens.
     :rtype: str
     """
-    text = text.replace('\n', ' ')
-    sentence = word_tokenize(text.lower())
-    words = [word for word in sentence
-             if (word not in stopwords.words('english') and word.isalnum())]
+    def _clean_text(txt):
+        for sign in ['\n', '\t']:
+            txt = text.replace(sign, ' ')
+        return re.sub('[^a-zA-Z]+', ' ', txt).lower()
 
-    stemmer = PorterStemmer()
-    return map(stemmer.stem, words)
+    result = _clean_text(text)
+    return [word for sentence in sent_tokenize(result) for word in word_tokenize(result)
+            if word not in stopwords.words('english') and len(word) > 2]

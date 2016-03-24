@@ -1,4 +1,5 @@
 import logging
+import clusterix
 from colorlog import ColoredFormatter
 """Clusterix logging with color."""
 
@@ -18,6 +19,7 @@ log.addHandler(stream)
 
 
 def log_info(message):
+    clusterix.update_msg = message
     log.info(message)
 
 

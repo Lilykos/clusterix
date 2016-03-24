@@ -3,15 +3,12 @@ var CsvFieldsInput = (function() {
         csvPanel: '#csv-fields-panel',
         selectID: '#multiple-fields-csv',
         scaleSelectors: '.scaling',
-        blockBySelector: '#block-by-field',
 
         csvFieldsContainer: '#csv-fields-container',
         scaledFieldsContainer: '#scale-fields-container',
-        blockByContainer: '#block-by-container',
 
         scaleFieldsTemplate: '#fields-to-scale-template',
         csvFieldsTemplate: '#fields-to-select-template',
-        blockByTemplate: '#block-by-template',
 
         fields: [],             // string array
         fieldsWithScaling: [],  // object array
@@ -42,14 +39,17 @@ var CsvFieldsInput = (function() {
         attr.fieldsWithScaling = fields.length
             ? fields.map(function(f) { return {name: f, scale: 1} })
             : attr.fields.map(function(f) { return {name: f, scale: 1} });
-        attr.blockBy = fields.length ? fields[0] : attr.fields[0];
+
+        // Everytime the values change, we want to change the block-by field
+        var fieldsToSend = fields.length ? fields : attr.fields;
+        $(document).trigger('csv-fields-change', {data: fieldsToSend});
     }
 
     /**
      * Render all the chosen fields, with their scaling.
      */
     function renderFieldsToScale() {
-        Utils.compileTemplate(attr.scaleFieldsTemplate, attr.scaledFieldsContainer, { fields: attr.fieldsWithScaling });
+        Utils.compileTemplate(attr.scaleFieldsTemplate, attr.scaledFieldsContainer, { fields: attr.fieldsWithScaling }, true);
         $(attr.scaleSelectors).on('change', updateFieldsWithScaling);
 
         Router.set('csvFields', attr.fieldsWithScaling);
@@ -59,30 +59,11 @@ var CsvFieldsInput = (function() {
      * Every time an item is added/removed, it re-renders the panels.
      */
     function renderFieldsToChoose() {
-        Utils.compileTemplate(attr.csvFieldsTemplate, attr.csvFieldsContainer, { fields: attr.fields });
+        Utils.compileTemplate(attr.csvFieldsTemplate, attr.csvFieldsContainer, { fields: attr.fields }, true);
         $(attr.selectID).dropdown({
             onChange: function(fields, item, selected) {
                 saveValues(fields);
-                renderBlockByField();
                 renderFieldsToScale();
-            }
-        });
-    }
-
-    /**
-     * Renders the block by field according to the user-chosen fields,
-     * and sets the variable to the Router.
-     */
-    function renderBlockByField() {
-        var fields = attr.fieldsWithScaling.map(function(f) { return f.name; });
-
-        Utils.compileTemplate(attr.blockByTemplate, attr.blockByContainer, { fields: fields });
-        Router.set('blockBy', attr.blockBy);
-
-        $(attr.blockBySelector).dropdown({
-            onChange: function(val, text, selected) {
-                attr.blockBy = text;
-                Router.set('blockBy', attr.blockBy);
             }
         });
     }
@@ -103,9 +84,11 @@ var CsvFieldsInput = (function() {
 
             renderFieldsToChoose();
             renderFieldsToScale();
-            renderBlockByField();
 
             $(attr.csvPanel).fadeIn();
+
+            // Panel hide/show
+            Utils.attachSliderToPanel('#csv-fields-hide', '#csv-fields-body', 150);
             console.log('Csv Fields Input init');
         },
 
