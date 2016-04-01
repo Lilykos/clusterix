@@ -38,7 +38,6 @@ def get_cluster_result(attrs):
     start = timer()
     # Get the results from all the requested algorithms
     #
-
     result = {}
     for alg in algorithms:
         if alg == 'kmeans':

@@ -21,6 +21,11 @@ var PreviewRenderer = (function() {
                     Utils.compileTemplate(attr.csvTemplate, attr.modalContent, {headers: headers, data: data}, true);
                     Router.set('delimiter', delimiter);
 
+                    // dimmer (modal) init
+                    $('#data-preview').on('click', function() {
+                        $('#preview-dimmer').dimmer('show');
+                    });
+
                     /**
                      * Render the csv panel. We do this here because we need the headers (fields).
                      */

@@ -1,8 +1,6 @@
 var DataInput = (function() {
-    var attr = {
-        dataInput: '#data-input',
-        dataPreview: '#data-preview'
-    };
+    var attr = {};
+    var dataInput = '#data-input';
 
     var fileInputConfig = {
         maxFileCount:1,
@@ -16,7 +14,7 @@ var DataInput = (function() {
         layoutTemplates: {
             main1: "{preview}<div class='input-group {class}'>" +
             "<div class='input-group-btn'><span class='light-blue'>{browse}</span>" +
-            "<span id='data-preview' data-toggle='modal' data-target='#data-preview-modal'>{upload}</span>" +
+            "<span id='data-preview'>{upload}</span>" + // data-toggle='modal' data-target='#data-preview-modal'
             "{remove}</div>{caption}</div>"
         }
     };
@@ -47,7 +45,7 @@ var DataInput = (function() {
          * @constructor
          */
         init: function() {
-            $(attr.dataInput)
+            $(dataInput)
                 .fileinput(fileInputConfig)
                 .on('change', function() {
                     // Checking for stuff

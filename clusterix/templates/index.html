@@ -66,7 +66,7 @@
 
     <!-- CSV FILE PREVIEW -->
     <script id="csv-file-preview-template" type="text/x-handlebars-template">
-    <table class="table table-hover table-striped" id="table-preview">
+    <table class="table table-hover table-striped light-blue-background" id="table-preview">
         <thead>
             <tr>{{#each headers}}<th>{{.}}</th>{{/each}}</tr>
         </thead>
@@ -364,9 +364,6 @@
         <a href="#" class="btn btn-warning btn-lg btn-block no-display" id="upload">
             <span class="glyphicon glyphicon-th"></span> Upload and Cluster Data
         </a>
-        <a href="#" class="btn btn-warning btn-lg btn-block" id="load-test">
-            <span class="glyphicon glyphicon-th"></span> load screen
-        </a>
 
     </div>
 
@@ -396,19 +393,27 @@
 <!--------------------------------->
 
 <!-- DATA PREVIEW MODAL -->
-<div id="data-preview-modal" class="modal fade" role="dialog" tabindex='-1'>
-    <div class="modal-dialog modal-preview">
-        <div class="modal-content">
-            <div class="modal-header light-blue-background">
-                <h4 class="modal-title white">Data Preview</h4>
-            </div>
-            <div class="modal-body" id="data-modal-content"></div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            </div>
+<div class="ui dimmer" id="preview-dimmer">
+    <div class="content">
+        <div class="center">
+            <div id="data-modal-content"></div>
         </div>
     </div>
 </div>
+
+{#<div id="data-preview-modal" class="modal fade" role="dialog" tabindex='-1'>#}
+{#    <div class="modal-dialog modal-preview">#}
+{#        <div class="modal-content">#}
+{#            <div class="modal-header light-blue-background">#}
+{#                <h4 class="modal-title white">Data Preview</h4>#}
+{#            </div>#}
+{#            <div class="modal-body" id="data-modal-content"></div>#}
+{#            <div class="modal-footer">#}
+{#                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
+{#</div>#}
 
 <!-- LOADING SCREEN DIMMER -->
 <div class="ui dimmer" id="loading-screen-dimmer">
@@ -574,8 +579,5 @@
         </div>
     </div>
 </div>
-
-
-
 </body>
 </html>
