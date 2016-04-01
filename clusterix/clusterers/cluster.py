@@ -5,7 +5,7 @@ from ..clusterers.utils import get_keys, get_data, get_vectorizer, create_input_
 from ..clusterers.algorithms import kmeans, block_clustering
 
 
-def get_cluster_result(attrs):
+def start_clustering_process(attrs):
     """Retrieve attributes from user, and use the requested algorithms to create d3-compatible json results."""
     timestamp, block_by, csv_fields, algorithms, vectorizer_name, k_num, bcluster_distance, affinity = \
         attrs['timestamp'], attrs['block_by'], attrs['csv_fields'], attrs['algorithms'], \

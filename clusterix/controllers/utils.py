@@ -12,9 +12,9 @@ def stringify_no_accents(text):
     return strip_accents(str(text))
 
 
-def get_attr_from_request(form):
-    """Get the attributes sent from the frontend (no files)."""
-    return {
+def get_attr_from_request(form, uploaded_files=None):
+    """Get the attributes sent from the frontend."""
+    attrs = {
         'algorithms': form.get('algorithms').split(','),
         'csv_fields': json.loads(form.get('csv_fields')),
         'block_by': form.get('block_by'),
@@ -25,22 +25,14 @@ def get_attr_from_request(form):
         'affinity': form.get('affinity')
     }
 
+    if uploaded_files is not None:
+        attrs.update({
+            'file': uploaded_files.to_dict()['file'],
+            'type': form.get('type'),
+            'timestamp': form.get('timestamp'),
+        })
 
-def get_attr_from_request_with_files(files, form):
-    """Get the attributes sent from the frontend (with files)."""
-    return {
-        'file': files.to_dict()['file'],
-        'type': form.get('type'),
-        'timestamp': form.get('timestamp'),
-        'algorithms': form.get('algorithms').split(','),
-        'csv_fields': json.loads(form.get('csv_fields')),
-        'block_by': form.get('block_by'),
-        'delimiter': form.get('delimiter'),
-        'vectorizer': form.get('vectorizer'),
-        'k_num': form.get('k_num'),
-        'bcluster_distance': form.get('bcluster_distance'),
-        'affinity': form.get('affinity')
-    }
+    return attrs
 
 
 def save_file_to_disk(file):

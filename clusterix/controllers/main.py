@@ -2,8 +2,8 @@ from flask import Blueprint, render_template, request, jsonify
 import clusterix
 
 from .input import read_save_to_db
-from ..controllers.utils import get_attr_from_request, get_attr_from_request_with_files, save_file_to_disk
-from ..clusterers.cluster import get_cluster_result
+from ..controllers.utils import get_attr_from_request, save_file_to_disk
+from ..clusterers.cluster import start_clustering_process
 
 
 main = Blueprint('main', __name__)
@@ -24,18 +24,21 @@ def data_file_input():
     # re-init the update message for the loading screen
     clusterix.update_msg = ''
 
-    attrs = get_attr_from_request_with_files(request.files, request.form)
+    attrs = get_attr_from_request(request.form, request.files)
     file_path = save_file_to_disk(attrs['file'])
 
     # Read file and save data to the db.
     read_save_to_db(attrs, file_path, attrs['timestamp'])
 
     # Get the algorithm results
-    result = get_cluster_result(attrs)
+    result = start_clustering_process(attrs)
     return jsonify(**result)
 
 
 @main.route('/upload_data', methods=['POST'])
 def upload_data():
-    pass
+    # re-init the update message for the loading screen
+    # clusterix.update_msg = ''
+
     # attrs = get_attr_from_request(request.form)
+    pass
