@@ -23,7 +23,7 @@ var PreviewRenderer = (function() {
 
                     // dimmer (modal) init
                     $('#data-preview').on('click', function() {
-                        $('#preview-dimmer').dimmer('show');
+                        $('#preview-dimmer').modal('show');
                     });
 
                     /**
