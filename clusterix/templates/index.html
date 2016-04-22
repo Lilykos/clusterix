@@ -29,6 +29,8 @@
 
     <script src="../static/js/input/data_input.js"></script>
     <script src="../static/js/input/algorithm_input.js"></script>
+    <script src="../static/js/input/algorithms/kmeans.js"></script>
+    <script src="../static/js/input/algorithms/hcluster.js"></script>
     <script src="../static/js/input/csv_fields_input.js"></script>
 
     <script src="../static/js/diagram/term_frequency_chart.js"></script>
@@ -55,11 +57,6 @@
     <!-- RAW SCRIPTS FOR TEMPLATING -->
     <!--------------------------------->
     {% raw %}
-    <!-- TEXT FILE PREVIEW -->
-    <script id="txt-file-preview-template" type="text/x-handlebars-template">
-        <pre><code class="nohighlight">{{data}}</code></pre>
-    </script>
-
     <!-- CSV FILE PREVIEW -->
     <script id="csv-file-preview-template" type="text/x-handlebars-template">
     <table class="table table-hover table-striped white-background" id="table-preview">
@@ -267,7 +264,8 @@
                     <select id="algorithms-selection" multiple="" class="ui dropdown selection col-lg-9">
                         <option value="">Choose...</option>
                         <option class="small-font" value="kmeans">K-Means</option>
-                        <option class="small-font" value="bcluster">Block Clustering</option>
+{#                        <option class="small-font" value="bcluster">Block Clustering</option>#}
+                        <option class="small-font" value="hcluster">Hierarchical Clustering</option>
                     </select>
                 </div>
 
@@ -298,15 +296,17 @@
                         </div>
                     </div>
 
-                    <!-- BLOCK CLUSTERING -->
+                    <!-- HIERARCHICAL CLUSTERING -->
                     <div class="panel panel-default">
                         <div class="panel-heading">
                             <h5 class="panel-title space-title"><a data-toggle="collapse" data-parent="#algorithm-accordion" href="#collapse-bcluster-options">Block Clustering</a></h5>
                         </div>
                         <div id="collapse-bcluster-options" class="panel-collapse collapse">
                             <div class="panel-body" id="bcluster-options-container">
+
                                 <!-- BLOCK BY -->
                                 <div id="block-by-container" class="form-group row"></div>
+
                                 <!-- DISTANCE METHODS -->
                                 <div class="form-group row">
                                     <label for="distance-method-selection" class="no-padding-left col-lg-3">Distance Methods</label>
@@ -328,7 +328,6 @@
                                         <option value="">Choose...</option>
                                         <option value="euclidean">Euclidean</option>
                                         <option value="cityblock">City block/Manhattan</option>
-                                        <option value="seuclidean">Standardized Euclidean</option>
                                         <option value="cosine">Cosine</option>
                                         <option value="correlation">Correlation</option>
                                         <option value="hamming">Hamming</option>
@@ -336,16 +335,14 @@
                                         <option value="chebyshev">Chebyshev</option>
                                         <option value="canberra">Canberra</option>
                                         <option value="braycurtis">Bray-Curtis</option>
-                                        <option value="mahalanobis">Mahalanobis</option>
+{#                                        <option value="mahalanobis">Mahalanobis</option>#}
                                         <option value="yule">Yule</option>
                                         <option value="matching">Matching</option>
                                         <option value="dice">Dice</option>
-                                        <option value="kulsinski">Kulsinski</option>
                                         <option value="rogerstanimoto">Rogers-Tanimoto</option>
                                         <option value="russellrao">Russell-Rao</option>
                                         <option value="sokalmichener">Sokal-Michener</option>
                                         <option value="sokalsneath">Sokal-Sneath</option>
-                                        <option value="wminkowski">Weighted Minkowski</option>
                                     </select>
                                 </div>
                             </div>
@@ -376,7 +373,6 @@
             <div class="col-lg-10">
                 <div id="vizualization-area" class="row"></div>
                 <div id="selections-area" class="row"><ul></ul></div>
-                </div>
             </div>
         </div>
     </div>

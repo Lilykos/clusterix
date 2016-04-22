@@ -1,44 +1,34 @@
 import json
-from os.path import join
+import os
 from werkzeug.utils import secure_filename
 
-from ..config import TEMP_FILE_PATH
+from ..config import TEMP_PATH
+from ..database.db import save_csv
 
 
-def get_data(form, uploaded_files=None):
+def get_attrs(request):
     """Get the attributes sent from the frontend."""
-    data = json.loads(form.get('data'))
+    attrs = json.loads(request.form.get('data'))
 
-    if uploaded_files is not None:
-        data.update({
-            'file': uploaded_files.to_dict()['file'],
-            'type': form.get('type'),
-            'timestamp': form.get('timestamp'),
+    if request.files:
+        attrs.update({
+            'file': request.files.to_dict()['file'],
+            'type': request.form.get('type'),
+            'timestamp': request.form.get('timestamp'),
         })
 
-    return data
+    return attrs
 
 
-def save_file_to_disk(file):
-    """Save file to the specified (in config) place."""
-    saved_file_path = join(TEMP_FILE_PATH, secure_filename(file.filename))
-    file.save(saved_file_path)
+def save_file_if_exists(attrs):
+    """Save file to disk, and according to the type, save to the DB."""
+    try:
+        f = attrs['file']
+        file_path = os.path.join(TEMP_PATH, secure_filename(f.filename))
+        f.save(file_path)
 
-    return saved_file_path
+        if attrs['type'] == 'text/csv':
+            save_csv(file_path, attrs)
 
-
-def get_clustered_ids(data):
-    """
-    Get a dict of id-cluster pairs and create a dict of cluster-list[ids]. E.g.
-    From:   {u'1': 2, u'1006': 1, u'191': 1, u'2': 2, u'276': 1, u'3': 2, u'358': 1, u'6': 3}
-    To:     {1: [1006, 191, 276, 358], 2: [1, 2, 3], 3: [6]}
-    """
-    clustered_ids = {}
-    for key in data.keys():
-        val = data[key]
-        try:
-            clustered_ids[val].append(int(key))
-        except KeyError:
-            clustered_ids[val] = [int(key)]
-
-    return clustered_ids
+    except KeyError:
+        pass  # that means that there was no file sent, so abort

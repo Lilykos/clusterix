@@ -38,7 +38,10 @@ var Renderer = (function() {
 
                         break;
 
-                    case 'bcluster':
+                    case 'hcluster':
+                        //new Treemap().init(data[key], sizeMap.width, sizeMap.height, selectors.diagramSelector, id);
+                        //new TreemapMini().init(data[key], sizeMini.width, sizeMini.height, selectors.miniSelector, id);
+
                         new Treemap().init(data[key], sizeMap.width, sizeMap.height, selectors.diagramSelector, id);
                         new TreemapMini().init(data[key], sizeMini.width, sizeMini.height, selectors.miniSelector, id);
 

@@ -2,14 +2,10 @@ numpy
 pandas
 scipy
 sklearn
-nltk
-chardet
-unidecode
 flask
 flask-script
 flask-assets
 requests
 git+https://github.com/inveniosoftware/beard.git
 colorlog
-tinydb
-ujson
+whoosh

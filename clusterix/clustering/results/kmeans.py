@@ -1,4 +1,4 @@
-def get_kmeans_json(coords, labels, centroids, n_clusters, items):
+def get_kmeans_json(coords, labels, centroids, n_clusters):
     """Get a dictionary that will be converted to json, and contains all the visualization data."""
     nodes = []
     for cluster in xrange(n_clusters):
@@ -9,10 +9,9 @@ def get_kmeans_json(coords, labels, centroids, n_clusters, items):
                 nodes.append({
                     'x': coords[i][0],
                     'y': coords[i][1],
-                    'content': items[i],
                     'cluster': cluster,
                     'isCentroid': False,
-                    'id': items[i]['id']
+                    'id': i
                 })
 
         # For each label, also add the centroid

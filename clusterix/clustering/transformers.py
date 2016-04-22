@@ -1,4 +1,3 @@
-from numbers import Number
 from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.decomposition import TruncatedSVD
 from sklearn.feature_extraction.text import HashingVectorizer, TfidfVectorizer, CountVectorizer
@@ -44,15 +43,18 @@ class MissingValuesTransformer(BaseEstimator, TransformerMixin):
 
 class Vectorizer(BaseEstimator, TransformerMixin):
     """If the values of the list are numeric, it returns them as they are, else it uses a vectorizer."""
-    def __init__(self, vec_name):
+    def __init__(self, vec_name, field_type):
         self.vectorizer = vectorizers[vec_name]
+        self.type = field_type
 
     def fit(self, X, y=None):
         return self
 
     def transform(self, X, y=None):
-        return np.array([[i] for i in X]) if isinstance(X[0], Number) \
-            else self.vectorizer.fit_transform(X)
+        if self.type == 'object':
+            return self.vectorizer.fit_transform(X)
+        else:
+            return np.array([[i] for i in X])
 
 
 class Scaler(BaseEstimator, TransformerMixin):

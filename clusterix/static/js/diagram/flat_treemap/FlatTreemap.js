@@ -1,4 +1,4 @@
-function Treemap() {
+function FlatTreemap() {
     var attr = {
         // Colors
         d3Color: d3.scale.category10(),
@@ -42,8 +42,8 @@ function Treemap() {
             attr.width = width;
             attr.height = height;
             attr.data = root;
-            attr.id = 'treemap-' + id;
-            attr.class = 'treemap';
+            attr.id = 'flat-treemap-' + id;
+            attr.class = 'flat-treemap';
             attr.nodeSelector = selector;
 
             $(selector).empty();

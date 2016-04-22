@@ -3,8 +3,7 @@ var Router = (function() {
         alertTemplate: '#alert-template',
         upload: '#upload',
 
-        urlUploadFile: '/upload_with_file',
-        urlUploadDataOnly: '/upload_data_only'
+        url: '/upload_and_cluster'
     };
 
     var newFile;
@@ -35,6 +34,11 @@ var Router = (function() {
                 blockBy: '',
                 distance: 'single',
                 affinity: 'euclidean'
+            },
+
+            hcluster: {
+                distance: 'single',
+                affinity: 'euclidean'
             }
         },
 
@@ -52,21 +56,17 @@ var Router = (function() {
 
         // If newFile == true, send the file
         // Else, do not send it and use the route that will get the data without preprocessing
-        var url;
         if (newFile) {
             data.append('file', dataFileInfo.file);
             data.append('type', dataFileInfo.file.type);
             data.append('timestamp', dataFileInfo.timestamp);
 
-            url = attr.urlUploadFile;
             newFile = false;
-        } else {
-            url = attr.urlUploadDataOnly;
         }
 
         $.ajax({
             type: 'POST',
-            url: url,
+            url: attr.url,
             data: data,
             cache: false,
             contentType: false,
@@ -95,7 +95,6 @@ var Router = (function() {
 
         /**
          * Saves the data file.
-         * @param file
          */
         setFile: function(file) {
             dataFileInfo = {

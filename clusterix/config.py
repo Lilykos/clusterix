@@ -1,5 +1,5 @@
 """App configuration"""
 
-TEMP_FILE_PATH = 'temp_input/'
-TEMP_MODULE_PATH = 'temp_modules/'
-DB_PATH = TEMP_FILE_PATH + 'db.json'
+TEMP_PATH = 'temp_input/'
+TEMP_RAW_INPUT = 'temp_input/index/'
+TEMP_PROCESSED_INPUT = 'temp_input/processed_index/'
