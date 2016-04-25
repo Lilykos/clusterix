@@ -5,7 +5,8 @@ var Renderer = (function() {
     var selectors = {
         diagramSelector: '#vizualization-area',
         infoSelector: '#selections-area ul',
-        miniSelector: '#viz-mini'
+        miniSelector: '#viz-mini',
+        resultsSelector: '#brush-results'
     };
 
     var idNumber = 0;
@@ -29,6 +30,7 @@ var Renderer = (function() {
             // Also empty the brushed content
             $(selectors.diagramSelector).empty();
             $(selectors.infoSelector).empty();
+            $(selectors.resultsSelector).empty();
 
             keys.forEach(function(key) {
                 switch (key) {
@@ -39,11 +41,12 @@ var Renderer = (function() {
                         break;
 
                     case 'hcluster':
-                        //new Treemap().init(data[key], sizeMap.width, sizeMap.height, selectors.diagramSelector, id);
-                        //new TreemapMini().init(data[key], sizeMini.width, sizeMini.height, selectors.miniSelector, id);
-
-                        new Treemap().init(data[key], sizeMap.width, sizeMap.height, selectors.diagramSelector, id);
-                        new TreemapMini().init(data[key], sizeMini.width, sizeMini.height, selectors.miniSelector, id);
+                        // new Treemap().init(data[key], sizeMap.width, sizeMap.height, selectors.diagramSelector, id);
+                        // new TreemapMini().init(data[key], sizeMini.width, sizeMini.height, selectors.miniSelector, id);
+                        //
+                        // break;
+                        new Scatterplot().init(data[key], sizeMap.width, sizeMap.height, selectors.diagramSelector, id);
+                        new ScatterplotMini().init(data[key], sizeMini.width, sizeMini.height, selectors.miniSelector, id);
 
                         break;
                 }

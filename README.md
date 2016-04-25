@@ -1,56 +1,62 @@
-# Clusterix: Visual exploration of clustered data
+
+![alt tag](http://i.imgur.com/CH6tN10.png)
+# Clusterix: A visual analytics approach to data clustering
 
 
-Clusterix is a tool that will allow users explore clustered data in an interactive manner.
-At the moment, the tool mainly tries to solve the problem of affiliations guessing.
+Clusterix is a web-based visual analytics tool that aspires to support clustering tasks by users, while having analysts at the center of the workflow. Clusterix provides the facilities to:
+
+* Load and preview JSON, CSV, or XML data;
+* select columns to be considered by the clustering algorithm and modify weights;
+* select and run one or more clustering algorithms (k­means, hierarchical clustering) with varying parameters;
+* view and interact with the results in a browser environment;
+* modify the parameters or input data to correct the clustering output.
+
+Such an iterative, visual analytics approach allows users to quickly determine the best clustering algorithm and parameters for their data, and to correct any errors in the clustering output. Clusterix has been applied to the clustering of heterogeneous data sets
+
 
 ## Usage
-Currently the project is in a very early stage of implementation, but can be used for data
-preprocessing and extraction using the following commands:
+
+First you need to install the requirements:
+
+`pip install -r requirements.txt`
+
+
+To run the project:
 
 `python manage.py runserver`
 
-This command will run the Flask server, after which it can be used to make POST requests to it,
-using the url [http://127.0.0.1:5000/add_affiliation/](http://127.0.0.1:5000/add_affiliation/).
+This command will run Clusterix on [http://127.0.0.1:5000](http://127.0.0.1:5000) where you will be able to use the interface to upload data files, and select the algorithms/options that you want.
 
-E.g. the string _Department of Physics and Engineering Physics, Fordham University Bronx, NY 10458, USA_, will return (and save to the db):
 
-```javascript
-{
-    "country": "USA",
-    "country_code": "US",
-    "department": "depart physic engin physic",
-    "grobid_xml": "<affiliation>... (GROBID xml here)</affiliation>",
-    "institution": "fordham univers bronx",
-    "laboratory": "",
-    "language": "en",
-    "post_box": "",
-    "post_code": "10458",
-    "raw_string": "Department of Physics and Engineering Physics, Fordham University Bronx, NY 10458, USA",
-    "raw_string_unicode": "Department of Physics and Engineering Physics, Fordham University Bronx, NY 10458, USA",
-    "region": "NY",
-    "settlement": ""
-}
-```
+## Features
 
-`python manage.py parse_xml <path/to/xml>`
+#### File input (CSV only currently)
+* Data Preview
+* Field selection
+* Field Scaling
 
-This command has the same processing and extraction workflow as above, but it is used to extract all the
-affiliations from a structured xml file.
+#### Vectorizers
+* Count Vactorizer
+* Tf-Idf Vectorizer
+* Hashing Vectorizer
 
-## Important steps / TODO
-- [ ] Crate API
-    - [x] Single affiliation REST API
-    - [ ] XML upload API (maybe not really useful, the manager should be enough)
-- [ ] Data preprocessing (affiliation specific)
-    - [x] Use GROBID API for affiliation parsing
-    - [x] Language detection
-    - [x] Standard NLP tasks (stemming, stopwords)
-    - [ ] Translation for non-english strings?
-- [ ] Clustering
-    - [ ] Create the clustering process
-    - [ ] Output in newick/json for presentation purposes
-- [ ] Interface
-    - [ ] Bootstrap / Materialize for UI
-    - [ ] d3 for the clustering presentation
-    - [ ] Frontend - backend communication for changing clustering parameters
+#### Algorithms
+* K-Means
+* Hierarchical Clustering (with various distance/linkage options)
+
+#### Plot Features
+* Scatterplot/Treemap vizualizations
+* Full text search for nodes
+* Brushing and zoom for targeted inspection
+* Various clustering metrics (TF-IDF, etc)
+
+
+## Screenshots
+
+### Main Window
+
+![alt tag](http://i.imgur.com/9Y5Mdh8.png)
+
+### Search
+
+![alt tag](http://i.imgur.com/RUz8Vyh.png)

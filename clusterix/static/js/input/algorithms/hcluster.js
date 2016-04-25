@@ -1,9 +1,10 @@
 var HCluster = (function() {
 
     var attr = {
-        bclusterDistSelector: '#distance-method-selection',
+        distanceSelector: '#distance-method-selection',
         affinitySelector: '#affinity-selection',
-        affinityContainerSelector: '#affinity-container'
+        affinityContainerSelector: '#affinity-container',
+        kSelector: '#hcluster-k-num'
 
         // Bcluster options
         //blockBySelector: '#block-by-field',
@@ -37,7 +38,7 @@ var HCluster = (function() {
     return {
         init: function() {
             // Distance methods
-            $(attr.bclusterDistSelector).dropdown({
+            $(attr.distanceSelector).dropdown({
                 onChange: function(val, text, selected) {
                     if (val === 'centroid' || val === 'median' || val === 'ward') {
                         $(attr.affinityContainerSelector).hide();
@@ -54,6 +55,11 @@ var HCluster = (function() {
                 onChange: function(val, text, selected) {
                     Router.data().algorithms.bcluster.affinity = val;
                 }
+            });
+
+            // K number
+            $(attr.kSelector).on('change', function() {
+                Router.data().algorithms.hcluster.kNumber = $(this).val();
             });
         }
     }

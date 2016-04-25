@@ -22,11 +22,8 @@
     <script src="../static/lib/fileinput.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.8/semantic.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/lunr.js/0.6.0/lunr.min.js"></script>
 
     <!-- JS -->
-    <script src="../static/js/diagram/treemap/treemap.js"></script>
-
     <script src="../static/js/input/data_input.js"></script>
     <script src="../static/js/input/algorithm_input.js"></script>
     <script src="../static/js/input/algorithms/kmeans.js"></script>
@@ -44,10 +41,7 @@
     <script src="../static/js/render/preview_renderer.js"></script>
     <script src="../static/js/render/loading_screen_renderer.js"></script>
 
-    <script src="../static/js/search/search.js"></script>
-    <script src="../static/js/search/search_modifier.js"></script>
-
-
+    <script src="../static/js/search.js"></script>
     <script src="../static/js/router.js"></script>
     <script src="../static/js/utils.js"></script>
     <script src="../static/js/init.js"></script>
@@ -91,44 +85,34 @@
         </select>
     </script>
 
-    <!-- BLOCK BY IN BLOCK CLUSTERING -->
-    <script id="block-by-template" type="text/x-handlebars-template">
-        <label for="block-by-field" class="no-padding-left col-lg-3">Block By</label>
-        <select id="block-by-field" class="ui dropdown selection col-lg-9">
-            <option value="">Choose...</option>
-            {{#each fields}}
-            <option class="small-font" value="{{.}}">{{.}}</option>
+    <!-- TF-IDF TABS TEMPLATE
+    <script id="tf-idf-template" type="text/x-handlebars-template">
+        <div class="ui top attached tabular menu" id="brush-info-start">
+            {#}{##}{#each clusterColors}}#}
+            <a class="tfidf-tab item" style="background: {{clusterColor}}" data-tab="cluster-{{clusterNum}}">Cluster {{clusterNum}}</a>
             {{/each}}
-        </select>
-    </script>
-
-    <!-- TERM FREQUENCY TEMPLATE -->
-    <script id="tf-template" type="text/x-handlebars-template">
-        <div class="panel grey-background">
-            <div class="panel-heading row no-padding-left dark-blue">
-                <h3 class="panel-title col-lg-10">Term Frequencies by cluster</h3>
-                <a class="dark-blue" id="tf-hide" href="#"><span class="glyphicon glyphicon-chevron-up col-lg-2"></span></a>
-            </div>
-            <div class="panel-body" id="tf-body">
-                <div class="panel-group" id="tf-accordion">
-
-                    {{#each clusters}}
-                    <div class="panel panel-default">
-                        <div class="panel-heading"  style="background: {{color}}">
-                            <h5 class="panel-title space-title white"><a data-toggle="collapse" data-parent="#tf-accordion" href="#collapse-tf-{{cluster}}">Cluster {{cluster}}</a></h5>
-                        </div>
-                        <div id="collapse-tf-{{cluster}}" class="panel-collapse collapse">
-                            <div class="panel-body" id="tf-cluster-{{cluster}}"></div>
-                        </div>
-                    </div>
-                    {{/each}}
-
-                </div>
-            </div>
         </div>
+        {#}{##}{#each clusterWords}}#}
+        <div id="tfidf-content-cluster-{{@key}}" class="tfidf-content ui bottom attached tab segment" data-tab="cluster-{{@key}}"></div>
+        {{/each}}
     </script>
 
-    <!-- TF-IDF TEMPLATE -->
+    <script id="tf-idf-template" type="text/x-handlebars-template">
+        <div class="container">
+        <div class="nav nav-tabs" id="brush-info-start">
+            {{#each clusterColors}}
+            <li class="tfidf-tab"><a data-toggle="tab" style="background: {{clusterColor}}" href="#tfidf-content-cluster-{{@key}}">Cluster {{clusterNum}}</a></li>
+            {{/each}}
+        </div>
+        <div class="tab-content">
+            {{#each clusterWords}}
+            <div id="tfidf-content-cluster-{{@key}}" class="tfidf-content tab-pane fade" data-tab="cluster-{{@key}}"></div>
+            {{/each}}
+        </div>
+        </div>
+    </script> -->
+
+    <!-- TF-IDF TEMPLATE  -->
     <script id="tf-idf-template" type="text/x-handlebars-template">
         <div class="panel grey-background">
             <div class="panel-heading row no-padding-left dark-blue">
@@ -153,6 +137,18 @@
             </div>
         </div>
     </script>
+
+    <!-- BLOCK BY IN BLOCK CLUSTERING
+    <script id="block-by-template" type="text/x-handlebars-template">
+        <label for="block-by-field" class="no-padding-left col-lg-3">Block By</label>
+        <select id="block-by-field" class="ui dropdown selection col-lg-9">
+            <option value="">Choose...</option>
+            {{#each fields}}
+            <option class="small-font" value="{{.}}">{{.}}</option>
+            {{/each}}
+        </select>
+    </script> -->
+
     {% endraw %}
     <!--------------------------------->
     <!-- END OF TEMPLATES -->
@@ -299,13 +295,17 @@
                     <!-- HIERARCHICAL CLUSTERING -->
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            <h5 class="panel-title space-title"><a data-toggle="collapse" data-parent="#algorithm-accordion" href="#collapse-bcluster-options">Block Clustering</a></h5>
+                            <h5 class="panel-title space-title"><a data-toggle="collapse" data-parent="#algorithm-accordion" href="#collapse-bcluster-options">Hierarchical Clustering</a></h5>
                         </div>
                         <div id="collapse-bcluster-options" class="panel-collapse collapse">
                             <div class="panel-body" id="bcluster-options-container">
 
-                                <!-- BLOCK BY -->
-                                <div id="block-by-container" class="form-group row"></div>
+                                <!-- BLOCK BY
+                                <div id="block-by-container" class="form-group row"></div> -->
+                                <div class="form-group">
+                                    <label class="control-label" for="scale">K Number</label>
+                                    <input class="form-control input-sm" id="hcluster-k-num" type="number" value="1">
+                                </div>
 
                                 <!-- DISTANCE METHODS -->
                                 <div class="form-group row">
@@ -335,7 +335,6 @@
                                         <option value="chebyshev">Chebyshev</option>
                                         <option value="canberra">Canberra</option>
                                         <option value="braycurtis">Bray-Curtis</option>
-{#                                        <option value="mahalanobis">Mahalanobis</option>#}
                                         <option value="yule">Yule</option>
                                         <option value="matching">Matching</option>
                                         <option value="dice">Dice</option>
@@ -373,6 +372,7 @@
             <div class="col-lg-10">
                 <div id="vizualization-area" class="row"></div>
                 <div id="selections-area" class="row"><ul></ul></div>
+                <div id="brush-results" class="row"></div>
             </div>
         </div>
     </div>

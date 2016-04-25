@@ -38,7 +38,8 @@ var Router = (function() {
 
             hcluster: {
                 distance: 'single',
-                affinity: 'euclidean'
+                affinity: 'euclidean',
+                kNumber: 1
             }
         },
 
@@ -119,11 +120,7 @@ var Router = (function() {
         /**
          * Self explained. Also notifies Search in order to create index based on csv fields.
          */
-        validateAndUpload: function() {
-            upload();
-            $(document).trigger('data-uploaded',
-                {data: dataModel.csvType.fieldsWithScaling}); // Search init basically
-        },
+        validateAndUpload: function() { upload(); },
 
         /**
          * Checks if the upload button exists, and makes it appear/disappear.

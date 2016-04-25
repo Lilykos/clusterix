@@ -1,7 +1,12 @@
+try:
+    import cPickle as pickle
+except ImportError:
+    import pickle
 from sklearn.pipeline import make_pipeline, make_union
 
 from ..clustering.transformers import ItemSelector, Scaler, Vectorizer
 from ..database.db import processed_db
+from ..config import CLUSTERER_PATH
 """General clustering functions."""
 
 
@@ -37,3 +42,23 @@ def get_clustered_ids(data):
             clustered_ids[val] = [int(key)]
 
     return clustered_ids
+
+
+def get_cluster_attrs(attrs):
+    """Get some general attributes for clustering/predictions."""
+    fields = attrs['csvType']['fieldsWithScaling']
+    field_names = [field['name'] for field in fields]
+    vec_name = attrs['vectorizer']
+    algorithms = attrs['algorithms']['algorithmsToUse']
+
+    return fields, field_names, vec_name, algorithms
+
+
+def save_clusterer(clusterer):
+    """Pickle clusterer object."""
+    pickle.dump(clusterer, open(CLUSTERER_PATH, "wb"))
+
+
+def load_clusterer():
+    """Load pickled clusterer object."""
+    return pickle.load(open(CLUSTERER_PATH, "rb"))

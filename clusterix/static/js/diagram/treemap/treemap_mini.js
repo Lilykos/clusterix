@@ -1,24 +1,11 @@
 function TreemapMini() {
     var attr = {
         // Colors
-        d3Color: d3.scale.category10(),
+        d3Color: d3.scale.category20(),
         defaultColor: '#95a5a6',
         stroke: '#fff',
         bgColor: '#ddd'
     };
-
-    /**
-     * Checks if the item is a child and sets the id on the treemap,
-     * while it saves the item in the search index.
-     * @param {Object} d
-     * @returns string
-     */
-    function setIDAndSave(d) {
-        if (d.content) {
-            Search.addToIndex(d.content);
-            return 'node-' + d.content.id;
-        }
-    }
 
     return {
 
@@ -59,14 +46,8 @@ function TreemapMini() {
                     .attr('height', function (d) { return d.dy; })
                     .attr('stroke', attr.stroke)
                     .style('stroke-width', 0.2)
-                    .attr('class', setIDAndSave)
+                    .attr('class', function(d) { return d.id ? 'node-' + d.id : ''; })
                     .attr('fill', function(d) { return d.children ? null : attr.d3Color(d.parent.name); });
-                    //.attr('fillbackup', function(d) {
-                    //    if (!d.children) {
-                    //        d.fillbackup = attr.d3Color(d.cluster);
-                    //        return d.fillbackup;
-                    //    }
-                    //});
 
             console.log('Treemap-mini init.');
         }

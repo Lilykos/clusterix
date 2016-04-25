@@ -1,11 +1,10 @@
+import numpy as np
+
 from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.decomposition import TruncatedSVD
 from sklearn.feature_extraction.text import HashingVectorizer, TfidfVectorizer, CountVectorizer
 
-import numpy as np
-
 TOKEN_PATTERN = r"\b\w+\b"  # Keeps single letter attrs
-
 vectorizers = {
     'hashing': HashingVectorizer(n_features=2 ** 12, non_negative=True, norm=None),
     'tfidf': TfidfVectorizer(max_features=2 ** 12, norm=None, token_pattern=TOKEN_PATTERN),

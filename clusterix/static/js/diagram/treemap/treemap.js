@@ -1,7 +1,7 @@
 function Treemap() {
     var attr = {
         // Colors
-        d3Color: d3.scale.category10(),
+        d3Color: d3.scale.category20(),
         defaultColor: '#95a5a6',
         stroke: '#fff',
         bgColor: '#ddd',
@@ -12,25 +12,11 @@ function Treemap() {
         height: 0
     };
 
-    /**
-     * Checks if the item is a child and sets the id on the treemap,
-     * while it saves the item in the search index.
-     * @param {Object} d
-     * @returns string
-     */
-    function setIDAndSave(d) {
-        if (d.content && d.content.id) {
-            Search.addToIndex(d.content);
-            return 'node-' + d.content.id;
-        }
-    }
-
     return {
 
         /**
          *Functionality
          *      - Initialize the mini-treemap, as well as render the actual representation.
-         *      - Handle the mini-treemap click events (show the big treemap).
          * @constructor
          * @param {Object} root A d3-compatible json, that contains the nodes/structure to create a treemap.
          * @param width
@@ -69,7 +55,7 @@ function Treemap() {
                     .attr('height', function (d) { return d.dy; })
                     .attr('stroke', attr.stroke)
                     .style('stroke-width', 0.5)
-                    .attr('class', setIDAndSave)
+                    .attr('class', function(d) { return d.id ? 'node-' + d.id : ''; })
                     .attr('fill', function(d) { return d.children ? null : attr.defaultColor; })
                     .attr('fillbackup', function(d) {
                         if (!d.children) {

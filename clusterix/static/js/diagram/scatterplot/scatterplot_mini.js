@@ -1,52 +1,43 @@
 function ScatterplotMini() {
-    var attr = {
-        d3Color: d3.scale.category10(),
-        darkgrey: '#7f8c8d'
-    };
+    var d3Color = d3.scale.category20();
+    var attr = {};
 
     var margins = {
-        left: 40,
+        left: 30,
         right: 30,
         top: 30,
         bottom: 30
     };
 
-    function getSVGClasses(d) {
-        return 'white-background ' + attr.class;
-    }
-
     function getXScale() {
-        return d3.scale.linear().domain(d3.extent(attr.data, function (d) { return d.x; }))
+        return d3.scale.linear()
+            .domain(d3.extent(attr.data, function (d) { return d.x; }))
             .range([0, attr.width - margins.left - margins.right]);
     }
 
     function getYScale() {
-        return d3.scale.linear().domain(d3.extent(attr.data, function (d) { return d.y; }))
+        return d3.scale.linear()
+            .domain(d3.extent(attr.data, function (d) { return d.y; }))
             .range([attr.height - margins.top - margins.bottom, 0]);
     }
 
-    function translate(a, b) {
-        return "translate(" + a + "," + b + ")"
-    }
+    function translate(a, b) { return "translate(" + a + "," + b + ")"; }
 
     return {
 
         /**
-         *
-         * @param root
-         * @param width
-         * @param height
-         * @param selector
-         * @param id
+         * Scatterplot minimap.
          */
         init: function(root, width, height, selector, id) {
             attr.width = width;
             attr.height = height;
-            attr.data = root.nodes.filter(function(d) { return !d.isCentroid }); // NO centroids needed
             attr.kNumber = root.k_num;
-            attr.id = 'scatterplot-mini-' + id;
-            attr.class = 'scatterplot-mini';
             attr.nodeSelector = selector + ' circle';
+
+            // NO centroids needed & filter elements to make minimap less heavy
+            attr.data = root.nodes.filter(function(d, index) {
+                return !d.isCentroid && index % 5 == 0
+            });
 
             var xScale = getXScale();
             var yScale = getYScale();
@@ -56,32 +47,22 @@ function ScatterplotMini() {
                 .append("svg")
                     .attr("width", width)
                     .attr("height", height)
-                    .attr('id', attr.id)
-                    .attr('class', getSVGClasses)
+                    .attr('id', 'scatterplot-mini-' + id)
+                    .attr('class', 'white-background scatterplot-mini')
                 .append("g")
                     .attr("transform", translate(margins.left, margins.top));
 
-            svg.append('rect')
-                .attr('width', width)
-                .attr('height', height)
-                .attr('fill', 'rgba(1,1,1,0)');
-
             // Node init (minimal, just to show the pattern in small scale)
-            svg.selectAll()
+            svg.selectAll(attr.nodeSelector)
                 .data(attr.data)
                 .enter()
                 .append("circle")
-                    .attr("r", 0.5)
+                    .attr("r", 1)
                     .attr("cx", function(d) { return xScale(d.x); })
                     .attr("cy", function(d) { return yScale(d.y); })
-                    .attr("class", function (d) { return 'node-' + d.id;})
-                    .attr("fill", function (d) { return attr.d3Color(d.cluster); })
-                    .attr('fillbackup', function (d) {
-                        d.fillbackup = attr.d3Color(d.cluster);
-                        return d.fillbackup;
-                    });
+                    .attr("fill", function (d) { return d3Color(d.cluster); });
 
-            console.log('Scatterplot mini init.')
+            console.log('Scatterplot mini init.');
         }
     }
 }

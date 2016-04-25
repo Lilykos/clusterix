@@ -1,12 +1,13 @@
 import pandas as pd
 
 from ..log import log_info
-from ..database.utils import get_whoosh_fields, get_processed
-from ..database import WhooshDB
-from ..config import TEMP_RAW_INPUT, TEMP_PROCESSED_INPUT
+from ..database.utils import get_whoosh_fields, get_processed, get_vocabulary
+from ..database import WhooshProcessedDB, WhooshVocabularyDB
+from ..config import TEMP_RAW_INPUT, TEMP_PROCESSED_INPUT, TEMP_VOCABULARY
 
-original_db = WhooshDB(TEMP_RAW_INPUT)
-processed_db = WhooshDB(TEMP_PROCESSED_INPUT)
+# original_db = WhooshDB(TEMP_RAW_INPUT)
+processed_db = WhooshProcessedDB(TEMP_PROCESSED_INPUT)
+vocab_db = WhooshVocabularyDB(TEMP_VOCABULARY)
 
 
 def save_csv(file_path, attrs):
@@ -31,13 +32,19 @@ def save_csv(file_path, attrs):
     fields = get_whoosh_fields(dtypes)
 
     # Save original data
-    log_info('Creating Whoosh DB (raw data)...')
-    original_db.initialize(fields, dtypes, data)
+    #
+    # log_info('Creating Whoosh DB (raw data)...')
+    # original_db.initialize(fields, dtypes, data)
 
     # Save processed data
+    #
+    log_info('Creating Whoosh DB (processed data)...')
     processed_data = pd.DataFrame(
         get_processed(data, dtypes)
     ).T.to_dict()
-
-    log_info('Creating Whoosh DB (processed data)...')
     processed_db.initialize(fields, dtypes, processed_data)
+
+    # Save vocabulary data
+    #
+    log_info('Creating Whoosh DB (vocabulary)...')
+    vocab_db.initialize(get_vocabulary(df.values))

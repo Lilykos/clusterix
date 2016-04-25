@@ -1,8 +1,8 @@
 from beard.clustering import ScipyHierarchicalClustering
 from sklearn.cluster import KMeans
 
-from ..clustering.results.kmeans import get_kmeans_json
-from ..clustering.results.hcluster import HClusterTree
+from ..clustering.results.plots import scatterplot
+from ..clustering.utils import save_clusterer
 
 
 def kmeans(X, attrs):
@@ -20,16 +20,17 @@ def kmeans(X, attrs):
                 ..............]}
     """
     n_clusters = int(attrs['kNumber'])
-    km = KMeans(n_clusters=n_clusters, n_jobs=-1)
-    km.fit(X)
+    kmeans = KMeans(n_clusters=n_clusters, n_jobs=-1)
+    kmeans.fit(X)
 
-    labels = km.labels_
-    centroids = km.cluster_centers_
+    labels = kmeans.labels_
+    centroids = kmeans.cluster_centers_
 
-    return get_kmeans_json(X, labels, centroids, n_clusters)
+    save_clusterer(kmeans)
+    return scatterplot(X, labels, n_clusters, centroids=centroids)
 
 
-def hierarchical_clustering(X, attrs):
+def hcluster(X, attrs):
     """
     Hierarchical Clustering.
     Return Example:
@@ -44,14 +45,19 @@ def hierarchical_clustering(X, attrs):
             ], 'name': 5, 'value': 5.018558362420772}
         ], 'name': 6, 'value': 300.0078487088252}
     """
+    n_clusters = int(attrs['kNumber'])
     hcluster = ScipyHierarchicalClustering(method=attrs['distance'],
-                                           affinity=attrs['affinity'])
+                                           affinity=attrs['affinity'],
+                                           n_clusters=n_clusters)
 
     hcluster.fit(X)
-    Z = hcluster.linkage_
+    labels = hcluster.labels_
 
-    return HClusterTree(Z).to_dict()
+    # Z = hcluster.linkage_
+    # return HClusterTree(Z).to_dict()
 
+    save_clusterer(hcluster)
+    return scatterplot(X, labels, n_clusters)
 
 # def block_clustering(X, original_items, data):
 #     # Cluster the data using the given block.

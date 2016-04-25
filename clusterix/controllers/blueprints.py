@@ -1,7 +1,11 @@
+import json
 from flask import Blueprint, render_template, request, jsonify
 
 from ..controllers.utils import get_attrs, save_file_if_exists
 from ..clustering.cluster import cluster_data
+from ..clustering.utils import get_clustered_ids
+from ..clustering.results.metrics import tfidf_from_ids
+from ..database.db import vocab_db
 
 main = Blueprint('main', __name__)
 
@@ -26,10 +30,32 @@ def upload_file():
     return jsonify(**result)
 
 
-@main.route('/metrics', methods=['POST'])
-def get_term_info():
-    pass
-    # clustered_ids = get_clustered_ids(json.loads(request.data))
-    #
-    # result = get_terms_json(clustered_ids)
-    # return jsonify(**result)
+@main.route('/tfidf', methods=['POST'])
+def tfidf():
+    """Get a list of id-cluster pairs, and return clustered term-tfidf pairs."""
+    clustered_ids = get_clustered_ids(
+        json.loads(request.form.get('ids'))
+    )
+
+    result = tfidf_from_ids(clustered_ids)
+    return jsonify(**{'tfidf_metrics': result})
+
+
+@main.route('/search', methods=['POST'])
+def search():
+    """Search a term and return the ids of the corresponding records."""
+    result = vocab_db.search_for(request.data)
+    return jsonify(**{'ids': result})
+
+
+@main.route('/content', methods=['POST'])
+def content():
+    ids = json.loads(request.form.get('ids'))
+
+    content = {}
+    for id in ids:
+        content[id] = {
+            'text': ' '.join(vocab_db.get_vocab_by_id(id))
+        }
+
+    return jsonify(**{'content': content})

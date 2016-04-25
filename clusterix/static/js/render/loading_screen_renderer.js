@@ -1,10 +1,11 @@
 var LoadingScreenRenderer = (function () {
     var loadingScreenIntervalID;
+    var loadingScreenID = '#loading-screen-dimmer';
 
     return {
 
         initLoadingScreen: function() {
-            $('#loading-screen-dimmer')
+            $(loadingScreenID)
                 .on('click', function(){ return false; })
                 .dimmer('show');
             LoadingScreenRenderer.render("#clusterix_loader");
@@ -28,7 +29,7 @@ var LoadingScreenRenderer = (function () {
 
         removeLoadingScreen: function() {
             clearInterval(loadingScreenIntervalID);
-            $('#loading-screen-dimmer').dimmer('hide');
+            $(loadingScreenID).dimmer('hide');
             //$('#loading-screen-msg').text('Loading...');
         },
 
