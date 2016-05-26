@@ -2,7 +2,7 @@ import pandas as pd
 
 from ..log import log_info
 from ..database.utils import get_whoosh_fields, get_processed, get_vocabulary
-from ..database import WhooshProcessedDB, WhooshVocabularyDB
+from ..database.models import WhooshProcessedDB, WhooshVocabularyDB
 from ..config import TEMP_RAW_INPUT, TEMP_PROCESSED_INPUT, TEMP_VOCABULARY
 
 # original_db = WhooshDB(TEMP_RAW_INPUT)

@@ -1,19 +1,8 @@
-from ..log import log_info
-
 from ..database.db import processed_db
-from ..clustering.utils import create_input_transformer, get_cluster_attrs, load_clusterer
+from ..clustering.utils import get_cluster_attrs, get_input_vector
 from ..clustering.algorithms import kmeans, hcluster
-from ..clustering.transformers import DecompositionTransformer
 
-
-def get_input_vector(fields, vec_name, data):
-    transformer = create_input_transformer(fields, vec_name)
-
-    X = transformer.fit_transform(data)
-    X = DecompositionTransformer().fit_transform(X)
-
-    log_info('Transformation pipeline complete.')
-    return X
+from ..log import log_info
 
 
 def cluster_data(attrs):

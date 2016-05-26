@@ -52,7 +52,7 @@ class HClusterTree(object):
         """Get the ids of all the leaves under a specific subtree/whole tree."""
         leaf_ids = lambda leaf: leaf.id
         return self.tree.pre_order(leaf_ids) if id is None \
-            else self.get_subtree(id).pre_order(leaf_ids)
+            else self._subtree(self.tree, id).pre_order(leaf_ids)
 
     @classmethod
     def _add_node(cls, node, dist):

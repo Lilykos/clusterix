@@ -17,7 +17,7 @@ def index():
 
 
 @main.route('/upload_and_cluster', methods=['POST'])
-def upload_file():
+def upload_and_cluster():
     """
     Read data attributes and save file (if it exists), do the clustering
     and return the correct results to the frontend.

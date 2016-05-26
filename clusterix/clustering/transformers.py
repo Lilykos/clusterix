@@ -1,7 +1,6 @@
 import numpy as np
 
 from sklearn.base import BaseEstimator, TransformerMixin
-from sklearn.decomposition import TruncatedSVD
 from sklearn.feature_extraction.text import HashingVectorizer, TfidfVectorizer, CountVectorizer
 
 TOKEN_PATTERN = r"\b\w+\b"  # Keeps single letter attrs
@@ -66,16 +65,3 @@ class Scaler(BaseEstimator, TransformerMixin):
 
     def transform(self, X, y=None):
         return self.scale * X
-
-
-class DecompositionTransformer(BaseEstimator, TransformerMixin):
-    """Transforms to 2D."""
-    def __init__(self, decomposition_instance=None):
-        self.to_2d = decomposition_instance if decomposition_instance \
-            else TruncatedSVD()
-
-    def fit(self, X, y=None):
-        return self
-
-    def transform(self, X, y=None):
-        return self.to_2d.fit_transform(X)

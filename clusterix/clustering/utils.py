@@ -1,13 +1,22 @@
-try:
-    import cPickle as pickle
-except ImportError:
-    import pickle
+from sklearn.decomposition import TruncatedSVD
 from sklearn.pipeline import make_pipeline, make_union
+from sklearn.externals import joblib
 
 from ..clustering.transformers import ItemSelector, Scaler, Vectorizer
 from ..database.db import processed_db
 from ..config import CLUSTERER_PATH
+
+from ..log import log_info
 """General clustering functions."""
+
+
+def get_input_vector(fields, vec_name, data):
+    """Transform the input and create a 2D vector to cluster."""
+    transformer = create_input_transformer(fields, vec_name)
+    pipeline = make_pipeline(transformer, TruncatedSVD())
+
+    log_info('Transformation pipeline complete.')
+    return pipeline.fit_transform(data)
 
 
 def create_input_transformer(fields, vec_name):
@@ -56,9 +65,9 @@ def get_cluster_attrs(attrs):
 
 def save_clusterer(clusterer):
     """Pickle clusterer object."""
-    pickle.dump(clusterer, open(CLUSTERER_PATH, "wb"))
+    joblib.dump(clusterer, open(CLUSTERER_PATH, "wb"))
 
 
 def load_clusterer():
     """Load pickled clusterer object."""
-    return pickle.load(open(CLUSTERER_PATH, "rb"))
+    return joblib.load(open(CLUSTERER_PATH, "rb"))

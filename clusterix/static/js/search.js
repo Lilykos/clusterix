@@ -4,8 +4,6 @@ var Search = (function() {
     var grey = '#7f8c8d';
     var url = '/search';
 
-
-
     function searchInScatterplot(newElements) {
         d3.selectAll('.node')
             .attr('fill', function(d) {
