@@ -6,10 +6,10 @@ function Scatterplot() {
     };
 
     var margins = {
-        left: 30,
-        right: 30,
-        top: 30,
-        bottom: 30
+        left: 20,
+        right: 20,
+        top: 20,
+        bottom: 20
     };
 
     var brushID = 0;
@@ -42,18 +42,11 @@ function Scatterplot() {
 
         var brushEnd = function() {
             if (brushSelectedIDs.size) {
-                // Create the new scatterplot and keep the brushed area on the map
-                var borderColor = attr.brushColor(ext_coords.x1 + ext_coords.y2);
                 var selectedItemsList = Array.from(brushSelectedIDs);
 
-                new ScatterplotBrushed().init(selectedItemsList, 350, 140,
-                    '#selections-area ul', brushID, attr.d3Color, borderColor
-                );
+                new ClusterDetailZone().init(selectedItemsList, 350, 140,
+                    '#selections-area ul', brushID, attr.d3Color);
 
-                drawBrush(svg, borderColor);
-                brushID++;
-
-                console.log('Brush selected: ' + brushSelectedIDs.size + ' items.');
             }
         };
 
@@ -122,7 +115,7 @@ function Scatterplot() {
                     .attr("width", width)
                     .attr("height", height)
                     .attr('id', 'scatterplot-' + id)
-                    .attr('class', 'white-background scatterplot')
+                    .attr('class', 'white-background border-white-round scatterplot')
                 .append("g")
                     .attr("transform", translate(margins.left, margins.top));
 

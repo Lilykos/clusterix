@@ -26,7 +26,7 @@ def kmeans(X, attrs):
     labels = kmeans.labels_
     centroids = kmeans.cluster_centers_
 
-    save_clusterer(kmeans)
+    # save_clusterer(kmeans)
     return scatterplot(X, labels, n_clusters, centroids=centroids)
 
 
@@ -56,7 +56,7 @@ def hcluster(X, attrs):
     # Z = hcluster.linkage_
     # return HClusterTree(Z).to_dict()
 
-    save_clusterer(hcluster)
+    # save_clusterer(hcluster)
     return scatterplot(X, labels, n_clusters)
 
 # def block_clustering(X, original_items, data):

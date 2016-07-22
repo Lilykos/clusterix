@@ -1,56 +1,65 @@
-var TermFrequencyChart = (function() {
+var TermFrequencyChart = (function () {
+
+    var options = {
+        block_width: 20,
+        block_height: 20,
+        spacing: 2
+    };
 
     return {
-        createTFIDFChart: function(clustersWithColors, clustersWithWords/*, tfidf, color*/) {
-            Utils.compileTemplate('#tf-idf-template', '#brush-results',
+        createTFIDFChart: function (clustersWithColors, clustersWithWords/*, tfidf, color*/) {
+            Utils.compileTemplate('#tf-idf-template', '#tf-idf-results',
                 {clusters: clustersWithColors}, true);
+
 
             for (var cluster in clustersWithWords) {
                 var tfidfItems = clustersWithWords[cluster];
-                
-                console.log('Cluster is ' + cluster);
-                
-                var selector = '#tf-idf-cluster-' + cluster;
-                var width = 250 - 60;
-                var x = d3.scale.linear()
-                        .domain([0, d3.max(tfidfItems, function(d) { return d.tfidf; })])
-                        .range([0, width]);
 
-                d3.select(selector)
-                    .attr('class', 'chart')
-                    .selectAll('div')
+                var selector = '#tf-idf-cluster-' + cluster;
+
+                var x = d3.scale.linear()
+                    .domain([0, d3.max(tfidfItems, function (d) {
+                        return d.tfidf;
+                    })])
+                    .range([0, options.block_width]);
+
+                var svg = d3.select(selector).append("svg")
+                    .attr('height', ((tfidfItems.length * (options.block_height + options.spacing)) + options.block_height))
+                    .attr('class', 'chart');
+
+                var rect_group = svg
+
+                    .selectAll('.tfidf-group')
                     .data(tfidfItems)
                     .enter()
-                    .append('div')
-                        .style('width', function(d) { return x(d.tfidf) + 'px'; })
-                        .style('background-color', function (d) {
-                            return clustersWithColors.filter(function(i) {
-                                return i.cluster == cluster;
-                            })[0].color;
-                        })
-                        .style('color', 'white')
-                        .text(function(d) { return d.term + ': ' + d.tfidf; });
-                
+                    .append('g').attr('class', 'tfidf-group')
+                    .attr('transform', function (d, i) {
+                        return 'translate(0, ' + (i * (options.block_height + options.spacing)) + ')'
+                    });
+
+
+                rect_group.append('rect').style('fill', '#f6f7f6').attr({
+                        'width': options.block_width,
+                        'height': options.block_height
+                    });
+
+                rect_group.append('rect')
+                    .attr('width', function (d) {
+                        return x(d.tfidf);
+                    })
+                    .attr('height', options.block_height)
+                    .style('fill', function (d) {
+                        return clustersWithColors.filter(function (i) {
+                            return i.cluster == cluster;
+                        })[0].color;
+                    });
+
+                rect_group.append('text').text(function (d) {
+                    return d.term + ': ' + d.tfidf;
+                }).style('font-size', '10px').attr('x', 50).attr('y', options.block_height/2);
+
             }
 
-            // tfidf.forEach(function(tfidfList, index) {
-            //     var selector = '#tf-idf-cluster-' + index;
-            //     var width = 250 - margins.left - margins.right;
-            //     var x = d3.scale.linear()
-            //             .domain([0, d3.max(tfidfList, function(d) { return d.score; })])
-            //             .range([0, width]);
-            //
-            //     d3.select(selector)
-            //         .attr('class', 'chart')
-            //         .selectAll('div')
-            //         .data(tfidfList)
-            //         .enter()
-            //         .append('div')
-            //             .style('width', function(d) { return x(d.score) + 'px'; })
-            //             .style('background-color', clustersWithColors[index].color)
-            //             .style('color', 'white')
-            //             .text(function(d) { return d.term + ': ' + d.score; });
-            // });
         }
     };
 })();

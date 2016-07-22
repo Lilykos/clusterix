@@ -70,6 +70,11 @@
     background: #ffffff;
 }
 
+.border-white-round {
+    border-radius: 8px;
+    border: 1px solid white;
+}
+
 .grey {
     background: #ecf0f1;
 }

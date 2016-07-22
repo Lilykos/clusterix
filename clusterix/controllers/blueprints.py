@@ -5,7 +5,7 @@ from ..controllers.utils import get_attrs, save_file_if_exists
 from ..clustering.cluster import cluster_data
 from ..clustering.utils import get_clustered_ids
 from ..clustering.results.metrics import tfidf_from_ids
-from ..database.db import vocab_db
+from ..database.db import vocab_db, processed_db
 
 main = Blueprint('main', __name__)
 
@@ -55,7 +55,8 @@ def content():
     content = {}
     for id in ids:
         content[id] = {
-            'text': ' '.join(vocab_db.get_vocab_by_id(id))
+            'text': ' '.join(vocab_db.get_vocab_by_id(id)),
+            'content': processed_db.get_records_by_id([id])
         }
 
     return jsonify(**{'content': content})

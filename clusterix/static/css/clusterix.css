@@ -143,8 +143,29 @@ ul {
 }
 
 .space-title {
-    margin-bottom: 5px;
+    margin-bottom: 15px;
     font-weight: 300;
+}
+
+.padding-top-20 {
+    padding-top: 20px;
+}
+
+.tf-idf-container {
+    padding: 10px;
+    min-height: 300px;
+    margin-bottom: 5px;
+}
+
+.distribution-container {
+    padding: 10px;
+    min-height: 150px;
+    margin-bottom: 5px;
+}
+
+.distribution-container p {
+    font-weight: bolder;
+    font-size: .8em;
 }
 
 .small-font {
@@ -170,4 +191,8 @@ ul {
     overflow-y: scroll;
     margin: 0 auto;
     border-radius: 4px;
+}
+
+#brush-results {
+    padding-top: 20px;
 }
