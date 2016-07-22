@@ -7,12 +7,6 @@ function ClusterDetailZone() {
         dataToCluster: {}
     };
 
-    var margins = {
-        left: 40,
-        right: 30,
-        top: 30,
-        bottom: 30
-    };
 
     function translate(a, b) { return "translate(" + a + "," + b + ")" }
 
@@ -59,7 +53,7 @@ function ClusterDetailZone() {
 
     }
 
-    function get_content(d) {
+    function getContent() {
         var data = new FormData();
         data.append('ids', JSON.stringify(
             attr.data.map(function(d) { return d.id; })
@@ -82,15 +76,13 @@ function ClusterDetailZone() {
 
     return {
 
-        init: function(rootData, width, height, selector, id, colors) {
-            attr.width = width;
-            attr.height = height;
+        init: function(rootData, selector, id, colors) {
             attr.data = rootData;
             attr.nodeSelector = '.scatterplot-selection circle';
             attr.d3Color = colors;
 
             getMetrics(rootData);
-            get_content();
+            getContent();
 
             var tip = d3.tip()
                 .attr("class", "d3-tip")

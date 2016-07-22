@@ -1,4 +1,5 @@
 function Scatterplot() {
+
     var attr = {
         d3Color: d3.scale.category20(),
         brushColor: d3.scale.category20(),
@@ -44,12 +45,10 @@ function Scatterplot() {
             if (brushSelectedIDs.size) {
                 var selectedItemsList = Array.from(brushSelectedIDs);
 
-                new ClusterDetailZone().init(selectedItemsList, 350, 140,
+                new ClusterDetailZone().init(selectedItemsList,
                     '#selections-area ul', brushID, attr.d3Color);
-
             }
         };
-
 
         var brush = d3.svg.brush()
             .x(xScale)
@@ -62,21 +61,6 @@ function Scatterplot() {
             .attr("class", "brush")
             .call(brush);
     }
-
-    function drawBrush(svg, borderColor) {
-        var width = ext_coords.x2 - ext_coords.x1,
-            height = ext_coords.y1 - ext_coords.y2;
-
-        svg.append('rect')
-            .attr('stroke', borderColor)
-            .attr('id', 'scatterplot-brushed-' + brushID)
-            .attr('class', 'brushed-area')
-            .attr('x', ext_coords.x1)
-            .attr('y', ext_coords.y2)
-            .attr('width', width)
-            .attr('height', height);
-    }
-
 
     /**
      * Axis/scaling/translation functions

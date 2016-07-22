@@ -32,3 +32,10 @@ def save_file_if_exists(attrs):
 
     except KeyError:
         pass  # that means that there was no file sent, so abort
+
+
+def replace_spaces_in_keys(d):
+    for record in d:
+        record['name'] = record['name'].replace(" ", "")
+
+    return d

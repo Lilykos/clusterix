@@ -8,12 +8,6 @@ from ..config import TEMP_RAW_INPUT, TEMP_PROCESSED_INPUT, TEMP_VOCABULARY
 processed_db = WhooshProcessedDB(TEMP_PROCESSED_INPUT)
 vocab_db = WhooshVocabularyDB(TEMP_VOCABULARY)
 
-def replace_spaces_in_keys(d):
-    for record in d:
-        record['name'] = record['name'].replace(" ", "")
-
-    return d
-
 def save_csv(file_path, attrs):
     """
     Save the items of a new file.
@@ -26,11 +20,6 @@ def save_csv(file_path, attrs):
                      encoding='latin-1')
 
     df.rename(columns=lambda x: x.strip().replace(" ", ""), inplace=True)
-
-    attrs["csvType"]["fieldsWithScaling"] = \
-        replace_spaces_in_keys(attrs["csvType"]["fieldsWithScaling"])
-
-    print attrs
 
     # fill median for missing numbers, NaN for strings
     data = df.fillna(df.median())\

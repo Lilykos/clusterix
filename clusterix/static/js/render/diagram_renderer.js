@@ -1,5 +1,5 @@
 var Renderer = (function() {
-    var sizeMap = {width: 1100, height: 460};
+    var sizeMap = {width: 1000, height: 300};
     var sizeMini = {width: 200, height: 100};
 
     var selectors = {
