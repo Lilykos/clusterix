@@ -1,4 +1,5 @@
 function Scatterplot() {
+
     var attr = {
         d3Color: d3.scale.category20(),
         brushColor: d3.scale.category20(),
@@ -6,10 +7,10 @@ function Scatterplot() {
     };
 
     var margins = {
-        left: 30,
-        right: 30,
-        top: 30,
-        bottom: 30
+        left: 20,
+        right: 20,
+        top: 20,
+        bottom: 20
     };
 
     var brushID = 0;
@@ -42,21 +43,12 @@ function Scatterplot() {
 
         var brushEnd = function() {
             if (brushSelectedIDs.size) {
-                // Create the new scatterplot and keep the brushed area on the map
-                var borderColor = attr.brushColor(ext_coords.x1 + ext_coords.y2);
                 var selectedItemsList = Array.from(brushSelectedIDs);
 
-                new ScatterplotBrushed().init(selectedItemsList, 350, 140,
-                    '#selections-area ul', brushID, attr.d3Color, borderColor
-                );
-
-                drawBrush(svg, borderColor);
-                brushID++;
-
-                console.log('Brush selected: ' + brushSelectedIDs.size + ' items.');
+                new ClusterDetailZone().init(selectedItemsList,
+                    '#selections-area ul', brushID, attr.d3Color);
             }
         };
-
 
         var brush = d3.svg.brush()
             .x(xScale)
@@ -69,21 +61,6 @@ function Scatterplot() {
             .attr("class", "brush")
             .call(brush);
     }
-
-    function drawBrush(svg, borderColor) {
-        var width = ext_coords.x2 - ext_coords.x1,
-            height = ext_coords.y1 - ext_coords.y2;
-
-        svg.append('rect')
-            .attr('stroke', borderColor)
-            .attr('id', 'scatterplot-brushed-' + brushID)
-            .attr('class', 'brushed-area')
-            .attr('x', ext_coords.x1)
-            .attr('y', ext_coords.y2)
-            .attr('width', width)
-            .attr('height', height);
-    }
-
 
     /**
      * Axis/scaling/translation functions
@@ -122,7 +99,7 @@ function Scatterplot() {
                     .attr("width", width)
                     .attr("height", height)
                     .attr('id', 'scatterplot-' + id)
-                    .attr('class', 'white-background scatterplot')
+                    .attr('class', 'white-background border-white-round scatterplot')
                 .append("g")
                     .attr("transform", translate(margins.left, margins.top));
 

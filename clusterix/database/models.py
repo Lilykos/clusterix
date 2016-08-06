@@ -67,7 +67,8 @@ class WhooshVocabularyDB(object):
 
         writer = self.index.writer()
         for doc in data:
-            writer.add_document(content=doc)
+            if doc:
+                writer.add_document(content=doc)
         writer.commit()
 
         self.searcher = self.index.searcher()

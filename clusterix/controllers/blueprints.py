@@ -1,11 +1,12 @@
 import json
 from flask import Blueprint, render_template, request, jsonify
 
-from ..controllers.utils import get_attrs, save_file_if_exists
+from ..controllers.utils import get_attrs, save_file_if_exists, \
+    replace_spaces_in_keys
 from ..clustering.cluster import cluster_data
 from ..clustering.utils import get_clustered_ids
 from ..clustering.results.metrics import tfidf_from_ids
-from ..database.db import vocab_db
+from ..database.db import vocab_db, processed_db
 
 main = Blueprint('main', __name__)
 
@@ -23,6 +24,14 @@ def upload_and_cluster():
     and return the correct results to the frontend.
     """
     attrs = get_attrs(request)
+
+    for attr in attrs:
+        print(attr)
+        if attr == "csvType":
+            print(attrs[attr])
+            attrs[attr]["fieldsWithScaling"] = \
+                replace_spaces_in_keys(attrs[attr]["fieldsWithScaling"])
+
     save_file_if_exists(attrs)
 
     # Get the algorithm results
@@ -55,7 +64,8 @@ def content():
     content = {}
     for id in ids:
         content[id] = {
-            'text': ' '.join(vocab_db.get_vocab_by_id(id))
+            'text': ' '.join(vocab_db.get_vocab_by_id(id)),
+            'content': processed_db.get_records_by_id([id])
         }
 
     return jsonify(**{'content': content})

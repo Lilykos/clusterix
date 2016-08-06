@@ -5,10 +5,8 @@ from ..database.utils import get_whoosh_fields, get_processed, get_vocabulary
 from ..database.models import WhooshProcessedDB, WhooshVocabularyDB
 from ..config import TEMP_RAW_INPUT, TEMP_PROCESSED_INPUT, TEMP_VOCABULARY
 
-# original_db = WhooshDB(TEMP_RAW_INPUT)
 processed_db = WhooshProcessedDB(TEMP_PROCESSED_INPUT)
 vocab_db = WhooshVocabularyDB(TEMP_VOCABULARY)
-
 
 def save_csv(file_path, attrs):
     """
@@ -19,7 +17,9 @@ def save_csv(file_path, attrs):
     df = pd.read_csv(file_path,
                      sep=attrs['csvType']['delimiter'],
                      error_bad_lines=False,
-                     encoding='utf-8')
+                     encoding='latin-1')
+
+    df.rename(columns=lambda x: x.strip().replace(" ", ""), inplace=True)
 
     # fill median for missing numbers, NaN for strings
     data = df.fillna(df.median())\
