@@ -53,10 +53,11 @@ This command will run Clusterix on [http://127.0.0.1:5000](http://127.0.0.1:5000
 
 ## Screenshots
 
-### Main Window
+### Wine Data
 
-![alt tag](http://i.imgur.com/9Y5Mdh8.png)
+![alt tag](http://i.imgur.com/AAudgAD.png)
 
-### Search
+![alt tag](http://i.imgur.com/DsDXYct.png)
 
-![alt tag](http://i.imgur.com/RUz8Vyh.png)
+
+### Wine Data
