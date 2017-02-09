@@ -33,7 +33,6 @@ This command will run Clusterix on [http://127.0.0.1:5000](http://127.0.0.1:5000
 #### File input (CSV only currently)
 * Data Preview
 * Field selection
-* Field Scaling
 
 #### Vectorizers
 * Count Vactorizer
@@ -42,10 +41,9 @@ This command will run Clusterix on [http://127.0.0.1:5000](http://127.0.0.1:5000
 
 #### Algorithms
 * K-Means
-* Hierarchical Clustering (with various distance/linkage options)
 
 #### Plot Features
-* Scatterplot/Treemap vizualizations
+* Scatterplot vizualizations
 * Full text search for nodes
 * Brushing and zoom for targeted inspection
 * Various clustering metrics (TF-IDF, etc)
@@ -58,6 +56,3 @@ This command will run Clusterix on [http://127.0.0.1:5000](http://127.0.0.1:5000
 ![alt tag](http://i.imgur.com/AAudgAD.png)
 
 ![alt tag](http://i.imgur.com/DsDXYct.png)
-
-
-### Wine Data

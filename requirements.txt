@@ -1,11 +1,8 @@
 numpy
 pandas
+pandasql
 scipy
 sklearn
 flask
 flask-script
-flask-assets
-requests
-git+https://github.com/inveniosoftware/beard.git
-colorlog
 whoosh

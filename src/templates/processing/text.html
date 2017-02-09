@@ -1,0 +1,43 @@
+<!-- TEXT OPTIONS -->
+<div class="panel-heading row no-padding-left light-blue">
+    <h3 class="panel-title col-lg-11">Text Options</h3>
+</div>
+<div class="panel-body grey-background" id="text-options-body">
+    <!-- VECTORIZER SELECTION -->
+    <div class="form-group row">
+        <label for="vectorizer-selection" class="no-padding-left col-lg-3">Vectorizer</label>
+        <select id="vectorizer-selection" class="ui dropdown selection col-lg-9">
+            <option value="">Choose...</option>
+            <option class="small-font" value="count">CountVectorizer</option>
+            <option class="small-font" value="hashing">HashingVectorizer</option>
+            <option class="small-font" value="tfidf">TfidfVectorizer</option>
+        </select>
+    </div>
+
+    <!-- NORMALIZATION -->
+    <div class="form-group row">
+        <label for="norm-selection" class="no-padding-left col-lg-3">Norm</label>
+        <select id="norm-selection" class="ui dropdown selection col-lg-9">
+            <option value="">Choose...</option>
+            <option class="small-font" value="l1">L1</option>
+            <option class="small-font" value="l2">L2</option>
+            <option class="small-font" value="none">None</option>
+        </select>
+    </div>
+
+    <!-- FEATURES -->
+    <div class="form-group">
+        <label class="control-label" for="feature-num">Number of Features</label>
+        <input class="form-control input-sm" id="feature-num" type="number" value="500">
+    </div>
+
+    <!-- STEMMING/STOPWORDS -->
+    <div class="form-group row">
+        <div class="ui checkbox">
+            <input type="checkbox" name="stemming"><label>Stemming</label>
+        </div><br>
+        <div class="ui checkbox">
+            <input type="checkbox" name="stopwords"><label>Stopwords removal</label>
+        </div>
+    </div>
+</div>

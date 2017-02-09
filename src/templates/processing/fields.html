@@ -1,0 +1,63 @@
+<!-- FIELDS SELECTION PANEL -->
+<div class="panel-heading row no-padding-left dark-green">
+    <h3 class="panel-title col-lg-11">Field Options</h3>
+</div>
+
+<div class="panel-body grey-background" id="csv-fields-body">
+    <div class="panel-group" id="csv-accordion">
+        <!-- CHOOSE FIELDS -->
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h5 class="panel-title space-title">
+                    <a data-toggle="collapse" data-parent="#csv-accordion" href="#collapse-fields">Choose fields for clustering</a>
+                </h5>
+            </div>
+
+            <div id="collapse-fields" class="panel-collapse collapse in">
+                <div class="panel-body" id="csv-fields-container">
+                    <select id="multiple-fields-csv" multiple="" class="ui dropdown selection">
+                        <option value="">Choose...</option>
+                        {% for field in fields %}
+                        <option class="small-font" style="font-size: small" value="{{ field }}">{{ field }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SAMPLING -->
+    <div class="form-group">
+        <label class="control-label" for="sample-fraction">Sample fraction (0 - 1)</label>
+        <input class="form-control input-sm" id="sample-fraction" type="number" value="1">
+    </div>
+
+    <!-- DECOMPOSITION -->
+    <div class="form-group row">
+        <label for="decomposition-selection" class="no-padding-left col-lg-3">Project using</label>
+        <select id="decomposition-selection" class="ui dropdown selection col-lg-9">
+            <option value="">Choose...</option>
+            <option class="small-font" value="pca">PCA</option>
+            <option class="small-font" value="svd">SVD</option>
+            <option class="small-font" value="tsne">t-SNE</option>
+            <option class="small-font" value="mds">MDS</option>
+        </select>
+    </div>
+
+    <!-- DECOMPOSITION METRICS -->
+    <div class="form-group row">
+        <label for="decomposition-metric-selection" class="no-padding-left col-lg-3">with metric</label>
+        <select id="decomposition-metric-selection" class="ui dropdown selection col-lg-9">
+            <option value="">Choose...</option>
+            <option class="small-font" value="cityblock">Cityblock</option>
+            <option class="small-font" value="euclidean">Euclidean</option>
+            <option class="small-font" value="cosine">Cosine</option>
+        </select>
+    </div>
+
+    <!-- PROJECTION BUTTON -->
+    <div class="row">
+        <a href="#" class="btn btn-warning btn-lg btn-block no-display dark-green-background" id="projection-results">
+            <span class="glyphicon glyphicon-stats"></span> Project Data</a>
+    </div>
+</div>
