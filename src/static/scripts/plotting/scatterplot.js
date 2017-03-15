@@ -1,20 +1,10 @@
- /**
- * Axis/scaling/translation/svg functions
- */
-function getXScale(data, w, m) {
-    return d3.scale.linear().domain(d3.extent(data, function (d) { return +d.x; }))
-        .range([0, w - m.left - m.right]);
-}
-
-function getYScale(data, h, m) {
-    return d3.scale.linear().domain(d3.extent(data, function (d) { return +d.y; }))
-        .range([h - m.top - m.bottom, 0]);
-}
-
-function translate(a, b) { return "translate(" + a + "," + b + ")" }
-
-
 function scatterplot(data) {
+    // data model
+    // [
+    //     {'clx_cluster': 0, 'clx_id': 2, 'x': 2.658062848683116e-16, 'y': 1.7320508075688774},
+    //     {'clx_cluster': 1, 'clx_id': 1, x': 1.5034503553765397, 'y': 0.0}, ...
+    // ]
+
     var margins = {left: 20, right: 20, top: 20, bottom: 20},
         height = 550,
         width = 1100;
@@ -22,7 +12,6 @@ function scatterplot(data) {
     // Empty everything in case of new scatterplot
     $('#vizualization-area').empty();
     $('#brushed-area').empty();
-    $('#cluster-comparison').empty();
     $('#tf-idf-results').empty();
 
     // Scaling init
@@ -48,7 +37,7 @@ function scatterplot(data) {
         .data(data)
         .enter()
         .append("circle")
-            .attr("r", 2)
+            .attr("r", 3)
             .attr('opacity', 0.5)
             .attr("fill", function (d) { return window.d3Color(d['clx_cluster']); })
             .attr('transform', function(d) { return translate(xScale(d.x), yScale(d.y)); });

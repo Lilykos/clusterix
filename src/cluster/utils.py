@@ -1,17 +1,18 @@
+import os
 from scipy.sparse import hstack
 from ..misc import get_vectorizer, stem_text_input
-from ..config import logger, log
+from ..config import logger, log, TEMP_PATH
 
 
-@log('Vectorization started.')
+@log('- Vectorization started.')
 def get_vectorized_text(dataframe, columns, attrs):
     """Vectorize the text columns of a dataframe. Append them in a single matrix"""
     vec = get_vectorizer(attrs)
-    stem = True if attrs['stemming'] == 'true' else False
+    stem = attrs['stemming']
 
     X = []
     for column in columns:
-        logger.info('- Vectorizing field: {}...'.format(column))
+        logger.info('-- Vectorizing field: {}...'.format(column))
         text = dataframe[column].values
 
         if stem:
@@ -38,3 +39,7 @@ def get_all_vectors(df, attrs):
     # Check if there are any text columns, and vectorize them
     return hstack([X, get_vectorized_text(df, text_columns, attrs)]) \
         if text_columns else X
+
+
+def projection_exists(attrs):
+    return '{}.pkl'.format(attrs['decomposition']) in os.listdir(TEMP_PATH)

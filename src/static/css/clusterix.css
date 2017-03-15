@@ -1,17 +1,8 @@
 /************************
- HTML overwrites
+ Bootstrap/HTML overwrites
  ************************/
-nav {
-    height: 80px;
-}
+nav { height: 80px; }
 
-ul {
-    list-style-type: none;
-}
-
-/************************
- Bootstrap overwrites
- ************************/
 .navbar {
     background-color: #2c3e50; /*FlatUI 'Midnight Blue'*/
     margin-bottom: 0;
@@ -34,6 +25,7 @@ ul {
  Clusterix elements
  ************************/
 
+
 /* Navbar elements */
 /*******************/
 .clusterix-logo {
@@ -47,30 +39,21 @@ ul {
     background-color: #34495e;
 }
 
-#viz-mini:hover {
-    fill-opacity: .4;
-    cursor: hand;
-}
 
-/* Process space */
+/* Process/Diagram space */
 /*****************/
+.processing-container { padding-top: 10px; }
 
-/* Diagram space */
-/*****************/
 .diagram-container {
     padding-bottom: 100%;
     margin-bottom: -100%;
     overflow: hidden;
     border-left: 4px solid #bdc3c7;
-}
-
-.processing-container, .diagram-container {
     padding-top: 10px;
 }
 
-.minimap:hover {
-    fill-opacity: .7;
-    cursor: hand;
+.scatterplot, .scatterplot-brushed {
+    border: 4px solid #bdc3c7;
 }
 
 .d3-tip {
@@ -78,17 +61,11 @@ ul {
     text-align: center;
     padding: 2px;
     font: 14px sans-serif;
-    background: lightsteelblue;
+    background: ghostwhite;
     pointer-events: none;
 }
 
-.axis {
-    fill: none;
-    stroke: #AAA;
-    stroke-width: 1px;
-}
-
-.brush .extent {
+.extent {
     stroke: #7f8c8d;
     fill-opacity: .125;
     shape-rendering: crispEdges;
@@ -99,42 +76,16 @@ ul {
     shape-rendering: crispEdges;
 }
 
-.chart div {
-    font: 14px sans-serif;
-    text-align: right;
-    padding: 3px;
-    margin: 5px 1px 1px;
-    font-family: "Lato", "proxima-nova", "Helvetica Neue", Arial, sans-serif;
-}
-
-#selections-area ul {
-    height: 150px;
-    width: 1100px;
-
-    float: left;
-    margin-right: -999em;
-    white-space: nowrap;
-    list-style: none;
-    display: block;
-}
-
-#selections-area ul li {
-    margin: 5px;
-    text-align: center;
-    float: left;
-    display: inline;
-}
-
 /************************
  Misc elements/changes
  ************************/
-.no-padding-left {
-    padding-left: 0;
-}
+.no-padding-left { padding-left: 0; }
 
-.no-display {
-    display: none;
-}
+.padding-top-20 { padding-top: 20px; }
+
+.no-display { display: none; }
+
+.small-font { font-size: small; }
 
 .upper-corner {
     position: fixed;
@@ -147,30 +98,9 @@ ul {
     font-weight: 300;
 }
 
-.padding-top-20 {
-    padding-top: 20px;
-}
 
-.tf-idf-container {
-    padding: 10px;
-    min-height: 300px;
-    margin-bottom: 5px;
-}
+/***********************************/
 
-.distribution-container {
-    padding: 10px;
-    min-height: 150px;
-    margin-bottom: 5px;
-}
-
-.distribution-container p {
-    font-weight: bolder;
-    font-size: .8em;
-}
-
-.small-font {
-    font-size: small;
-}
 
 #loading-screen-dimmer {
     background-color: rgba(255, 255, 255, 0.8);
@@ -193,6 +123,45 @@ ul {
     border-radius: 4px;
 }
 
-#brush-results {
-    padding-top: 20px;
+
+/************** TFIDF Charting **********/
+
+.bar:hover {
+    fill: #7f8c8d;
+}
+
+.bartext {
+    fill: ghostwhite;
+    font-size: 10px;;
+}
+
+
+/***************** Scatterplot Matrix ***************/
+.matrix {
+    font-size: 10px;
+    padding: 10px;
+}
+
+.axis, .frame { shape-rendering: crispEdges; }
+
+.axis line {
+  stroke: #ddd;
+}
+
+.axis path {
+  display: none;
+}
+
+.cell text {
+  font-weight: bold;
+  text-transform: capitalize;
+}
+
+.frame {
+  fill: none;
+  stroke: #aaa;
+}
+
+circle.hidden {
+  fill: #ccc !important;
 }

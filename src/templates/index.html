@@ -5,36 +5,29 @@
     <!-- CSS -->
     <link rel="stylesheet" type="text/css" href="../static/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="../static/css/fileinput.css">
-    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Roboto:300,400,500,700">
     <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.8/semantic.min.css">
 
     <link rel="stylesheet" type="text/css" href="../static/css/clusterix.css">
     <link rel="stylesheet" type="text/css" href="../static/css/clusterix_colors.css">
 
     <!-- JS LIB -->
-    <script src="../static/lib/jquery-2.1.4.min.js"></script>
-    <script src="../static/lib/bootstrap.js"></script>
-
-    <script src="../static/lib/d3.min.js"></script>
-    <script src="../static/lib/d3-tip.js"></script>
-    <script src="../static/lib/fileinput.js"></script>
+    <script src="../static/js/jquery-2.1.4.min.js"></script>
+    <script src="../static/js/bootstrap.js"></script>
+    <script src="../static/js/d3.min.js"></script>
+    <script src="../static/js/fileinput.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.8/semantic.min.js"></script>
 
     <!-- JS -->
-    <script src="../static/js/diagram/term_frequency_chart.js"></script>
-    <script src="../static/js/diagram/treemap/treemap.js"></script>
-    <script src="../static/js/diagram/treemap/treemap_mini.js"></script>
-    <script src="../static/js/diagram/scatterplot/scatterplot.js"></script>
-    <script src="../static/js/diagram/scatterplot/scatterplot_mini.js"></script>
-    <script src="../static/js/diagram/scatterplot/cluster_details.js"></script>
-    <script src="../static/js/diagram/distribution_chart.js"></script>
-
-    <script src="../static/js/render/diagram_renderer.js"></script>
-    <script src="../static/js/loading.js"></script>
-
-    <script src="../static/js/search.js"></script>
-    <script src="../static/js/router.js"></script>
-    <script src="../static/js/init.js"></script>
+    <script src="../static/scripts/plotting/scatterplot.js"></script>
+    <script src="../static/scripts/plotting/scatterplot_brush_init.js"></script>
+    <script src="../static/scripts/plotting/scatterplot_brushed_area.js"></script>
+    <script src="../static/scripts/plotting/scatterplot_matrix.js"></script>
+    <script src="../static/scripts/plotting/tfidf_chart.js"></script>
+    <script src="../static/scripts/loading.js"></script>
+    <script src="../static/scripts/search.js"></script>
+    <script src="../static/scripts/router.js"></script>
+    <script src="../static/scripts/misc.js"></script>
+    <script src="../static/scripts/init.js"></script>
 </head>
 <body>
 
@@ -51,14 +44,14 @@
             <a class="clusterix-logo pull-left" href="#"><img src="../static/img/clusterix.svg"/></a>
         </div>
 
-{#        <!-- SEARCH BAR -->#}
-{#        <div class="navbar-collapse collapse">#}
-{#            <form class="navbar-form navbar-right" role="search">#}
-{#                <div class="form-group">#}
-{#                    <input type="text" id="search" class="form-control white" placeholder="Search...">#}
-{#                </div>#}
-{#            </form>#}
-{#        </div>#}
+        <!-- SEARCH BAR -->
+        <div class="navbar-collapse collapse">
+            <form class="navbar-form navbar-right" role="search">
+                <div class="form-group">
+                    <input type="text" id="search" class="form-control white" placeholder="Search...">
+                </div>
+            </form>
+        </div>
     </div>
 </nav>
 
@@ -72,7 +65,7 @@
     <!-- PROCESS SPACE -->
     <!--------------------------------->
     <div class="col-lg-3 processing-container">
-        <h2 class="space-title">Processing Space</h2>
+        <h2 class="space-title">Data Processing</h2>
 
         <!-- DATA INPUT PANEL -->
         <div class="panel grey-background">
@@ -88,26 +81,11 @@
         <!-- FIELDS SELECTION PANEL -->
         <div class="panel no-display grey-background" id="fields-panel"></div>
 
-        <!-- STATS PANEL -->
-        <div class="panel no-display grey-background" id="stats-panel"></div>
-
         <!-- TEXT OPTIONS PANEL -->
         <div class="panel no-display grey-background" id="text-options-panel"></div>
 
         <!-- ALGORITHMS AND DEFINITIONS PANEL -->
         <div class="panel no-display grey-background" id="algorithms-panel"></div>
-
-        <!-- UPLOAD/CLUSTER/VISUALIZATION BUTTONS -->
-        <div class="row">
-            <div class="col-lg-6">
-                <a href="#" class="btn btn-warning btn-lg btn-block no-display" id="get-results">
-                    <span class="glyphicon glyphicon-th"></span> Get Results</a>
-            </div>
-            <div class="col-lg-6">
-                <a href="#" class="btn btn-warning btn-lg btn-block no-display" id="projection-results">
-                    <span class="glyphicon glyphicon-stats"></span> Projection</a>
-            </div>
-        </div>
     </div>
 
 
@@ -115,32 +93,29 @@
     <!-- DIAGRAM SPACE -->
     <!--------------------------------->
     <div class="col-lg-9 diagram-container grey-background">
+
+        <!-- VISUALIZATION -->
         <div class="row">
-            <h2 class="space-title">Visualization Swatchboard</h2>
-            <div class="col-lg-2">
-                <div id="viz-mini"></div>
+            <h2 class="space-title">Visualization Swatchboard</h2><div id="vizualization-area" class="row"></div>
+        </div>
+
+        <!-- BRUSH, TFIDF -->
+        <div id="brush-results" class="row padding-top-20 no-display" >
+            <div class="col-md-6">
+                <h3 class="text-left space-title">Selected Area</h3><div id="brushed-area"></div>
             </div>
-            <div class="col-lg-10">
-                <div id="vizualization-area" class="row"></div>
-                <div id="brush-results" class="row">
-
-                    <div class="container-fluid hidden">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <h3 class="text-center">TF-IDF by cluster</h3>
-                                <div id="tf-idf-results"></div>
-                            </div>
-
-                            <div class="col-md-8">
-                                <h3 class="text-center">Cluster Dimension Comparison</h3>
-                                <div id="cluster-comparison"></div>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
+            <div class="col-md-6">
+                <h3 class="text-left space-title">TF-IDF by cluster</h3><div id="tf-idf-results"></div>
             </div>
         </div>
+
+
+        <!-- SCATTERPLOT MATRIX -->
+        <div id="scatterplot-matrix" class="row padding-top-20 no-display">
+            <h3 class="text-left space-title">Scatterplot Matrix</h3><div id="matrix-area" class="row"></div>
+        </div>
+
+
     </div>
 </div>
 

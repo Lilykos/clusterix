@@ -3,32 +3,21 @@
     <h3 class="panel-title col-lg-11">Field Options</h3>
 </div>
 
-<div class="panel-body grey-background" id="csv-fields-body">
-    <div class="panel-group" id="csv-accordion">
-        <!-- CHOOSE FIELDS -->
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h5 class="panel-title space-title">
-                    <a data-toggle="collapse" data-parent="#csv-accordion" href="#collapse-fields">Choose fields for clustering</a>
-                </h5>
-            </div>
-
-            <div id="collapse-fields" class="panel-collapse collapse in">
-                <div class="panel-body" id="csv-fields-container">
-                    <select id="multiple-fields-csv" multiple="" class="ui dropdown selection">
-                        <option value="">Choose...</option>
-                        {% for field in fields %}
-                        <option class="small-font" style="font-size: small" value="{{ field }}">{{ field }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-            </div>
-        </div>
+<div class="panel-body grey-background">
+    <!-- CHOOSE FIELDS -->
+    <div class="form-group row">
+        <label for="multiple-fields-csv" class="no-padding-left col-lg-3">Use fields</label>
+        <select id="multiple-fields-csv" multiple="" class="ui dropdown selection col-lg-9">
+            <option value="">Choose...</option>
+            {% for field in fields['all'] %}
+            <option class="small-font" value="{{ field }}">{{ field }}</option>
+            {% endfor %}
+        </select>
     </div>
 
     <!-- SAMPLING -->
     <div class="form-group">
-        <label class="control-label" for="sample-fraction">Sample fraction (0 - 1)</label>
+        <label class="control-label" for="sample-fraction">Sample fraction [0.0, 1.0]</label>
         <input class="form-control input-sm" id="sample-fraction" type="number" value="1">
     </div>
 
@@ -57,7 +46,25 @@
 
     <!-- PROJECTION BUTTON -->
     <div class="row">
-        <a href="#" class="btn btn-warning btn-lg btn-block no-display dark-green-background" id="projection-results">
+        <a href="#" class="btn btn-lg btn-block dark-green-background white" id="projection-results">
             <span class="glyphicon glyphicon-stats"></span> Project Data</a>
+    </div><br>
+
+
+    <!-- SCATTERPLOT MATRIX FIELDS -->
+    <div class="form-group row">
+        <label for="scatterplot-matrix-fields" class="no-padding-left col-lg-3">Scatterplot matrix fields</label>
+        <select id="scatterplot-matrix-fields" multiple="" class="ui dropdown selection col-lg-9">
+            <option value="">Choose...</option>
+            {% for field in fields['scatter'] %}
+            <option class="small-font" value="{{ field }}">{{ field }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <!-- SCATTERPLOT MATRIX BUTTON -->
+    <div class="row">
+        <a href="#" class="btn btn-lg btn-block dark-green-background white" id="scatterplot-matrix-button">
+            <span class="glyphicon glyphicon-th"></span> Get Scatterplot Matrix</a>
     </div>
 </div>

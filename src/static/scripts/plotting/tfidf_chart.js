@@ -1,59 +1,66 @@
-function drawBrushArea(data) {
-    var margins = { left: 40, right: 30, top: 30, bottom: 30 },
-        width = 500,
-        height = 250;
-
-    // Axis init
-    var xScale = getXScale(data, width, margins);
-    var yScale = getYScale(data, height, margins);
-
-    var zoom = d3.behavior.zoom()
-        .x(xScale).y(yScale)
-        .scaleExtent([-5, 20])
-        .on("zoom", function() {
-            svg.selectAll('#brushed-area circle').attr('transform', function(d) {
-                return translate(xScale(d.x), yScale(d.y));
-            });
-        });
-
-    // SVG init
-    var svg = d3.select('#brushed-area')
-        .append("svg")
-            .attr("width", width)
-            .attr("height", height)
-            .attr('class', 'white-background scatterplot-brushed');
-
-    svg.append('rect')
-        .attr('width', width)
-        .attr('height', height)
-        .attr("x", 0)
-        .attr("y", 0)
-        .style("stroke-width", 3)
-        .attr('fill', 'rgba(1,1,1,0)')
-        .call(zoom);
-
-    // Node init
-    svg.selectAll('.scatterplot-selection circle')
-        .data(data)
-        .enter()
-        .append('circle')
-            .attr("r", 4)
-            .attr('fill', function (d) { return window.d3Color(d['clx_cluster']); })
-            .attr('transform', function(d) { return translate(xScale(d.x), yScale(d.y)); })
-            .on("mouseover", showTooltip)
-            // .on("mouseout", hideTooltip);
-}
-
-
 function drawTfidf(_data) {
+    // _data model:
+    // {
+    //     '0':[{'term': 'x', 'score': y}, {'term': 'x', 'score': y}, ...],
+    //     '1': [...], ...
+    // }
+
     $("#tf-idf-results").empty();
     var margins = { left: 40, right: 30, top: 30, bottom: 30 },
         width = 500,
         height = 250,
-        innerWidth  = width  ,
-        innerHeight = height,
         clusters = Object.keys(_data);
 
+    clusters.forEach(function(cluster) {
+        var data = _data[cluster];
+
+        // x, y scaling & axis
+        var xScale = d3.scale.linear().range([0, width]);
+        var yScale = d3.scale.ordinal().rangeRoundBands([0, height]);
+
+        xScale.domain([0, d3.max(data, function (d){ return d.score; })]);
+        yScale.domain(data.map(function (d){ return d.term; }));
+
+
+        // Main SVG
+        var yAxis = d3.svg.axis().scale(yScale).orient("left").outerTickSize(0);
+        var svg = d3.select("#tf-idf-results")
+            .append("svg")
+            .attr("width", width)
+            .attr("height", height);
+        var g = svg.append("g")
+            .call(yAxis)
+            .attr("transform", translate(margins.left, 0));
+
+
+        // Bars init
+        var bar = g.selectAll('rect')
+            .data(data)
+            .enter()
+            .append('rect')
+                .attr('class', 'bar')
+                .attr('fill', function (d) {
+                    return window.d3Color(parseInt(cluster));
+                })
+                .attr('height', yScale.rangeBand())
+                .attr('width', function (d){ return xScale(d.score); })
+                .attr('x', 0)
+                .attr('y', function (d){ return yScale(d.term); });
+
+        // Bar labels
+        g.selectAll(".bartext")
+            .data(data)
+            .enter()
+            .append("text")
+            .attr("class", "bartext")
+            .attr("x", 10)
+            .attr("y", function(d) { return yScale(d.term) + 14; })
+            .text(function(d){ return d.score; });
+    });
+}
+
+
+// EAMMON'S PREVIOUS VERSION
 
 //     var options = {
 //         block_width: 20,
@@ -104,49 +111,3 @@ function drawTfidf(_data) {
 //     }).style('font-size', '10px').attr('x', 50).attr('y', options.block_height/2);
 //
 // }
-
-    clusters.forEach(function(cluster) {
-        var data = _data[cluster];
-
-        // x, y scaling & axis
-        var xScale = d3.scale.linear().range([0, innerWidth]);
-        var yScale = d3.scale.ordinal().rangeRoundBands([0, innerHeight]);
-
-        xScale.domain([0, d3.max(data, function (d){ return d.score; })]);
-        yScale.domain(data.map(function (d){ return d.term; }));
-
-
-        // Main SVG
-        var yAxis = d3.svg.axis().scale(yScale).orient("left").outerTickSize(0);
-        var svg = d3.select("#tf-idf-results")
-            .append("svg")
-            .attr("width", width)
-            .attr("height", height);
-        var g = svg.append("g")
-            .call(yAxis)
-            .attr("transform", translate(margins.left, 0));
-
-
-        // Bars init
-        var bar = g.selectAll('rect')
-            .data(data)
-            .enter()
-            .append('rect')
-                .attr('class', 'bar')
-                .attr('fill', function (d) { return window.d3Color(cluster); })
-                .attr('height', yScale.rangeBand())
-                .attr('width', function (d){ return xScale(d.score); })
-                .attr('x', 0)
-                .attr('y', function (d){ return yScale(d.term); });
-
-        // Bar labels
-        g.selectAll(".bartext")
-            .data(data)
-            .enter()
-            .append("text")
-            .attr("class", "bartext")
-            .attr("x", 10)
-            .attr("y", function(d) { return yScale(d.term) + 14; })
-            .text(function(d){ return (d.score/1000).toFixed(5); });
-    });
-}

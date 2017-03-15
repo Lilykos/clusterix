@@ -8,9 +8,9 @@
         <label for="vectorizer-selection" class="no-padding-left col-lg-3">Vectorizer</label>
         <select id="vectorizer-selection" class="ui dropdown selection col-lg-9">
             <option value="">Choose...</option>
-            <option class="small-font" value="count">CountVectorizer</option>
-            <option class="small-font" value="hashing">HashingVectorizer</option>
-            <option class="small-font" value="tfidf">TfidfVectorizer</option>
+            <option class="small-font" value="count">Count Vectorizer (BoW)</option>
+            <option class="small-font" value="hashing">Hashing Vectorizer</option>
+            <option class="small-font" value="tfidf">TF-IDF Vectorizer</option>
         </select>
     </div>
 
@@ -27,16 +27,16 @@
 
     <!-- FEATURES -->
     <div class="form-group">
-        <label class="control-label" for="feature-num">Number of Features</label>
+        <label class="control-label" for="feature-num">Number of features</label>
         <input class="form-control input-sm" id="feature-num" type="number" value="500">
     </div>
 
     <!-- STEMMING/STOPWORDS -->
     <div class="form-group row">
-        <div class="ui checkbox">
+        <div class="ui checkbox" id="stem-checkbox">
             <input type="checkbox" name="stemming"><label>Stemming</label>
         </div><br>
-        <div class="ui checkbox">
+        <div class="ui checkbox" id="stop-checkbox">
             <input type="checkbox" name="stopwords"><label>Stopwords removal</label>
         </div>
     </div>

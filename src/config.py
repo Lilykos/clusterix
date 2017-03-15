@@ -3,18 +3,19 @@ import sys
 
 
 # Algorithm templates
-algorithms = {
+algorithm_paths = {
     'kmeans':       'algorithms/kmeans.html',
     'hcluster':     'algorithms/hcluster.html',
     'meanshift':    'algorithms/meanshift.html',
-    'spectral':     'algorithms/spectral.html'
+    'dbscan':       'algorithms/dbscan.html'
 }
 
 # App configuration
 TEMP_PATH = 'temp/'
 CLUSTERER_PATH = 'temp/clusterer.pkl'
 DATAFRAME_PATH = 'temp/dataframe.pkl'
-DECOMPOSITION_MODEL_PATH = 'temp/decomposition.pkl'
+DECOMPOSITION_MODEL_PATH = 'temp/{}.pkl'
+X_PATH = 'temp/X.npy'
 
 stopwords = ['i', 'me', 'my', 'myself', 'we', 'our', 'ours', 'ourselves', 'you', 'your', 'yours', 'yourself',
              'yourselves', 'he', 'him', 'his', 'himself', 'she', 'her', 'hers', 'herself', 'it', 'its', 'itself',
@@ -37,8 +38,8 @@ logger = logging
 def log(msg):
     """Logger decorator."""
     def decorator(func):
-        def wrapper(*args, **kwargs):
+        def wrapper(*args):
             logger.info(msg)
-            return func(*args, **kwargs)
+            return func(*args)
         return wrapper
     return decorator

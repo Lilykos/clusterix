@@ -3,18 +3,8 @@ $(function() {
 
     // Data input
     $('#data-input')
-        .fileinput({
-            maxFileCount:1, allowedFileExtensions: ['csv'], showPreview: false, showRemove: false,
-            uploadClass: 'btn btn-default', uploadLabel: 'Preview',
-            uploadIcon: '<span class="glyphicon glyphicon-eye-open"></span> ',
-            layoutTemplates: {
-                main1: "{preview}<div class='input-group {class}'>" +
-                "<div class='input-group-btn'><span class='light-blue'>{browse}</span>" +
-                "<span id='data-preview'>{upload}</span>{remove}</div>{caption}</div>"
-            }
-        })
+        .fileinput(fileInputConfig())
         .on('change', function() {
-            // Checking for stuff and create the data file
             if (!this.files[0]) return;
 
             var formData = new FormData();
@@ -29,15 +19,19 @@ $(function() {
                 }
             });
         });
+    initSearch();
 });
 
 
 function initFields(data) {
+    // Init all the needed elements for the processing space
+
     // FIELDS
     $('#fields-panel').html(data['fields']).fadeIn();
     $('#multiple-fields-csv').dropdown();
     $('#decomposition-selection').dropdown();
     $('#decomposition-metric-selection').dropdown();
+    $('#scatterplot-matrix-fields').dropdown();
 
     // ALGORITHMS
     $('#algorithms-panel').html(data['algorithms']).fadeIn();
@@ -54,11 +48,6 @@ function initFields(data) {
         $('#text-options-panel').html(data['textOptions']).fadeIn();
         $('#vectorizer-selection').dropdown();
         $('#norm-selection').dropdown();
-
         $('.checkbox').checkbox();
     }
-
-    // UPLOAD BUTTON
-    $('#get-results').fadeIn(200);
-    $('#projection-results').fadeIn(200);
 }

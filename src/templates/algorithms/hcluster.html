@@ -1,43 +1,32 @@
-        <!-- HIERARCHICAL CLUSTERING -->
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h5 class="panel-title space-title">
-                    <a data-toggle="collapse"
-                       data-parent="#algorithm-accordion" href="#collapse-bcluster-options">Hierarchical Clustering</a>
-                </h5>
-            </div>
-            <div id="collapse-bcluster-options" class="panel-collapse collapse">
-                <div class="panel-body" id="bcluster-options-container">
 
-                    <!-- DISTANCE METHODS -->
-                    <div class="form-group row">
-                        <label for="distance-method-selection" class="no-padding-left col-lg-3">Distance Methods</label>
-                        <select id="distance-method-selection" class="ui dropdown selection col-lg-9">
-                            <option value="">Choose...</option>
-                            <option value="single">Single</option>
-                            <option value="complete">Complete</option>
-                            <option value="average">Average</option>
-                            <option value="weighted">Weighted</option>
-                            <option value="centroid">Centroid</option>
-                            <option value="median">Median</option>
-                            <option value="ward">Ward</option>
-                        </select>
-                    </div>
+<!-- K NUMBER -->
+<div class="form-group">
+    <label class="control-label" for="kmeans-num">K Number</label>
+    <input class="form-control input-sm" id="kmeans-num" type="number" value="1">
+</div>
 
-                    <!-- AFFINITY METHODS -->
-                    <div class="form-group row" id="affinity-container">
-                        <label for="affinity-selection" class="no-padding-left col-lg-3">Affinity</label>
-                        <select id="affinity-selection" class="ui dropdown selection col-lg-9">
-                            <option value="">Choose...</option>
-                            <option value="euclidean">Euclidean</option>
-                            <option value="cityblock">Cityblock/Manhattan</option>
-                            <option value="cosine">Cosine</option>
-                            <option value="correlation">Correlation</option>
-                            <option value="hamming">Hamming</option>
-                            <option value="jaccard">Jaccard</option>
-                        </select>
-                    </div>
+<!-- LINKAGE METHODS -->
+<div class="form-group row">
+    <label for="linkage-selection" class="no-padding-left col-lg-3">Linkage Methods</label>
+    <select id="linkage-selection" class="ui dropdown selection col-lg-9">
+        <option value="">Choose...</option>
+        <option value="complete">Complete</option>
+        <option value="average">Average</option>
+        <option value="ward">Ward</option>
+    </select>
+</div>
 
-                </div>
-            </div>
-        </div>
+<!-- AFFINITY METHODS -->
+<div class="form-group row" id="affinity-container">
+    <label for="affinity-selection" class="no-padding-left col-lg-3">Affinity</label>
+    <select id="affinity-selection" class="ui dropdown selection col-lg-9">
+        <option value="">Choose...</option>
+        <option value="euclidean">Euclidean</option>
+        <option value="manhattan">Manhattan</option>
+        <option value="cosine">Cosine</option>
+    </select>
+</div>
+<script>
+    $('#linkage-selection').dropdown();
+    $('#affinity-selection').dropdown();
+</script>

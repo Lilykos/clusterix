@@ -5,10 +5,12 @@
 
 Clusterix is a web-based visual analytics tool that aspires to support clustering tasks by users, while having analysts at the center of the workflow. Clusterix provides the facilities to:
 
-* Load and preview JSON, CSV, or XML data;
-* select columns to be considered by the clustering algorithm and modify weights;
-* select and run one or more clustering algorithms (k­means, hierarchical clustering) with varying parameters;
+* Load and preview CSV data files;
+* create a 2D projection of the dataset
+* select any combination of fields to be used for projection/clustering;
+* select and run one or more clustering algorithms (K-Means, Agglomerative Clustering, Mean Shift) with varying parameters;
 * view and interact with the results in a browser environment;
+* save time and use an iterative approach;
 * modify the parameters or input data to correct the clustering output.
 
 Such an iterative, visual analytics approach allows users to quickly determine the best clustering algorithm and parameters for their data, and to correct any errors in the clustering output. Clusterix has been applied to the clustering of heterogeneous data sets
@@ -33,18 +35,29 @@ This command will run Clusterix on [http://127.0.0.1:5000](http://127.0.0.1:5000
 #### File input (CSV only currently)
 * Data Preview
 * Field selection
+* Text Features (Vectorizers, stemming, stopwords, etc)
 
 #### Vectorizers
 * Count Vactorizer
 * Tf-Idf Vectorizer
 * Hashing Vectorizer
 
+
+#### Decomposition
+* PCA
+* SVD
+* MDS
+* t-SNE
+
 #### Algorithms
 * K-Means
+* Agglomerative Clustering
+* Mean Shift
+* DBSCAN
 
 #### Plot Features
 * Scatterplot vizualizations
-* Full text search for nodes
+* Full text/column search for the nodes
 * Brushing and zoom for targeted inspection
 * Various clustering metrics (TF-IDF, etc)
 

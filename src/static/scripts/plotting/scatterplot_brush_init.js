@@ -27,9 +27,10 @@ function initBrush(xScale, yScale, svg) {
         if (brushSelectedIDs.size) {
             var selectedItemsList = Array.from(brushSelectedIDs);
             var ids = new Set(selectedItemsList.map(function (d) { return d['clx_cluster']; }));
-
             drawBrushArea(selectedItemsList);
-            $('body').trigger('tfidf-request', [ids]);
+
+            $('body').trigger('tfidf-request', [Array.from(ids)]);
+            $('#brush-results').removeClass('no-display');
             // new ClusterDetailZone().init(selectedItemsList, '#selections-area ul', brushID, window.d3Color);
         }
     };

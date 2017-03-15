@@ -1,10 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+<table class="table">
+    <thead><tr>{% for field in data.fields %}<th>{{ field }}</th>{% endfor %}</tr></thead>
+    <tbody><tr>{% for item in data.details %}<td>{{ item }}</td>{% endfor %}</tr></tbody>
+</table>

@@ -1,60 +1,30 @@
-from sklearn.cluster import KMeans
+from sklearn.cluster import KMeans, DBSCAN, MeanShift, AgglomerativeClustering
 from ..config import log
-from ..misc import scatterplot
-from ..utils import save_cluster_model
 
 
-@log('K-Means clustering started.')
+@log('- K-Means clustering started.')
 def kmeans(X, attrs):
-    """
-    K-Means clustering.
-    Return example:
-        {'k_num': 2,
-         'nodes': [
-               {'cluster': 0, 'isCentroid': False, 'id': 2,
-                'x': 2.658062848683116e-16, 'y': 1.7320508075688774},
-               {'cluster': 0, 'isCentroid': True,
-                'x': 2.220446049250313e-16, 'y': 1.7320508075688774},
-               {'cluster': 1, 'isCentroid': False, 'id': 1,
-                'x': 1.5034503553765397, 'y': 0.0},
-                ..............]}
-    """
-    n_clusters = int(attrs['kNumber'])
-    k_means = KMeans(n_clusters=n_clusters, n_jobs=-1)
-    k_means.fit(X)
-
-    labels = k_means.labels_
-    centroids = k_means.cluster_centers_
-
-    save_cluster_model(k_means)
-    return labels, scatterplot(X, labels, n_clusters, centroids=centroids)
+    return KMeans(n_clusters=int(attrs['kNumber']), n_init=100, algorithm='full', n_jobs=-1).fit(X)
 
 
-# def hcluster(X, attrs):
-#     """
-#     Hierarchical Clustering.
-#     Return Example:
-#         {'children': [
-#             {'children': [], 'name': 2, 'value': 150.0039243544126},
-#             {'children': [
-#                 {'children': [], 'name': 1, 'value': 2.509279181210386},
-#                 {'children': [
-#                     {'children': [], 'name': 0, 'value': 2.4987419269136737},
-#                     {'children': [], 'name': 3, 'value': 2.4987419269136737}
-#                 ], 'name': 4,'value': 4.997483853827347}
-#             ], 'name': 5, 'value': 5.018558362420772}
-#         ], 'name': 6, 'value': 300.0078487088252}
-#     """
-#     n_clusters = int(attrs['kNumber'])
-#     hcluster = ScipyHierarchicalClustering(method=attrs['distance'],
-#                                            affinity=attrs['affinity'],
-#                                            n_clusters=n_clusters)
-#
-#     hcluster.fit(X)
-#     labels = hcluster.labels_
-#
-#     # Z = hcluster.linkage_
-#     # return HClusterTree(Z).to_dict()
-#
-#     # save_clusterer(hcluster)
-#     return scatterplot(X, labels, n_clusters)
+@log('- DBSCAN clustering started.')
+def dbscan(X, attrs,):
+    return DBSCAN(min_samples=int(attrs['minSamples']), eps=float(attrs['eps']), n_jobs=-1).fit(X)
+
+
+@log('- Mean Shift clustering started.')
+def meanshift(X, attrs):
+    return MeanShift(cluster_all=attrs['clusterAll'], min_bin_freq=int(attrs['binNumber']), n_jobs=-1).fit(X)
+
+
+@log('- Hierarchical clustering started.')
+def hcluster(X, attrs):
+    return AgglomerativeClustering(n_clusters=int(attrs['kNumber']), linkage=attrs['linkage'], affinity=attrs['affinity']).fit(X)
+
+
+cluster_algorithms = {
+    'kmeans': kmeans,
+    'dbscan': dbscan,
+    'hcluster': hcluster,
+    'meanshift': meanshift
+}
