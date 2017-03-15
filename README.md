@@ -62,6 +62,16 @@ This command will run Clusterix on [http://127.0.0.1:5000](http://127.0.0.1:5000
 * Various clustering metrics (TF-IDF, etc)
 
 
+## Instructions
+Clusterix works iteratively, so there are certain steps that need to be followed:
+* Upload a data file. the necessary information/preprocessing will happen and the options will be shown
+* First you need to get a projection of the data, so use all the text and field options to tune your decomposition.
+* The decomposition model and the coordinates are saved, so that you can iterate through clustering models really fast.
+* In case you need to try a new decomposition, create a new projection.
+* Use brushing to get TF-IDF (if applicable) and a zoomed area for browsing.
+* The Search function works using the SQLite syntax, so everytime you want to write something imagine that it starts like this: `SELECT * FROM dataframe WHERE...`
+
+
 ## Screenshots
 
 ### Wine Data
